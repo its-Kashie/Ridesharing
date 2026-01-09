@@ -145,7 +145,7 @@ Analytics must remain correct after rollback operations.
 ---
 
 ## Project Structure
-
+```bash
 ​📂 Ride-Sharing-System
 ├── 📂 src
 │   ├── 📂 core
@@ -175,7 +175,7 @@ Analytics must remain correct after rollback operations.
 │   └── 📄 algorithms.md
 ├── 📄 README.md
 └── 📄 .gitignore  
-
+```
 ---
 
 ## 12. Terminal Command to Create Project Structure

@@ -12,8 +12,21 @@ const zoneColors = {
   airport: { bg: "bg-red-500/20", border: "border-red-500", text: "text-red-400" },
 };
 
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/services/api";
+
 export default function CityGraph() {
   const [selectedNode, setSelectedNode] = useState<any>(null);
+
+  const { data: graphData } = useQuery({
+    queryKey: ["graph"],
+    queryFn: api.getGraph,
+  });
+
+  const { data: status } = useQuery({
+    queryKey: ["status"],
+    queryFn: api.getStatus,
+  });
 
   return (
     <div className="p-6 lg:p-8 h-[calc(100vh-2rem)] flex flex-col animate-fade-in">
@@ -28,7 +41,7 @@ export default function CityGraph() {
       <div className="flex-1 flex gap-6 min-h-0">
         {/* Map Canvas */}
         <div className="flex-1 glass-card overflow-hidden relative">
-          <GTACityMap 
+          <GTACityMap
             onNodeSelect={setSelectedNode}
             showDrivers={true}
             showRiders={true}
@@ -108,20 +121,20 @@ export default function CityGraph() {
             <h3 className="font-semibold text-foreground mb-3">Live Statistics</h3>
             <div className="grid grid-cols-2 gap-3">
               <div className="text-center p-2 bg-muted/50 rounded-lg">
-                <div className="text-2xl font-bold text-primary">16</div>
+                <div className="text-2xl font-bold text-primary">{graphData?.nodes || 0}</div>
                 <div className="text-xs text-muted-foreground">Nav Nodes</div>
               </div>
               <div className="text-center p-2 bg-muted/50 rounded-lg">
-                <div className="text-2xl font-bold text-secondary">24</div>
+                <div className="text-2xl font-bold text-secondary">{graphData?.edges || 0}</div>
                 <div className="text-xs text-muted-foreground">Roads</div>
               </div>
               <div className="text-center p-2 bg-muted/50 rounded-lg">
-                <div className="text-2xl font-bold text-success">5</div>
+                <div className="text-2xl font-bold text-success">{status?.drivers || 0}</div>
                 <div className="text-xs text-muted-foreground">Drivers</div>
               </div>
               <div className="text-center p-2 bg-muted/50 rounded-lg">
-                <div className="text-2xl font-bold text-warning">3</div>
-                <div className="text-xs text-muted-foreground">Riders</div>
+                <div className="text-2xl font-bold text-warning">{(graphData?.zones?.length || 0)}</div>
+                <div className="text-xs text-muted-foreground">Zones</div>
               </div>
             </div>
           </div>

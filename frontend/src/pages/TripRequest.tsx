@@ -15,17 +15,27 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 
+import { api } from "@/services/api";
+
 const TripRequest = () => {
     const [isDispatching, setIsDispatching] = useState(false);
 
-    const handleDispatch = () => {
+    const handleDispatch = async () => {
         setIsDispatching(true);
-        setTimeout(() => {
-            setIsDispatching(false);
+        try {
+            const riderId = Math.floor(Math.random() * 1000);
+            // Mock nodes for now or could be selected from UI
+            const res = await api.requestTrip(riderId, 1, 4);
+
             toast.success("Trip dispatched successfully!", {
-                description: "Driver D2 (Sarah Chen) has been assigned to the trip.",
+                description: `Trip ID: ${res.tripId}. Status: ${res.status}. Driver ID: ${res.driverId}`,
             });
-        }, 2000);
+        } catch (error) {
+            toast.error("Failed to dispatch trip. Is the backend running?");
+            console.error(error);
+        } finally {
+            setIsDispatching(false);
+        }
     };
 
     return (

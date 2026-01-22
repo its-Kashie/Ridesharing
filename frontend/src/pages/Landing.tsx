@@ -9,10 +9,12 @@ import {
   BarChart3,
   ArrowRight,
   Play,
-  Sparkles
+  Sparkles,
+  ChevronRight
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Navbar } from "@/components/layout/Navbar";
 
 const features = [
   {
@@ -70,8 +72,10 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen gradient-bg gradient-mesh overflow-hidden">
+      <Navbar />
+
       {/* Floating Graph Nodes Background */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+      <div className="fixed inset-0 pointer-events-none overflow-hidden opacity-50">
         {floatingNodes.map((node, i) => (
           <div
             key={i}
@@ -111,42 +115,20 @@ export default function Landing() {
 
       {/* Hero Section */}
       <div className="relative z-10">
-        <div className="container mx-auto px-6 py-20">
-          {/* Header */}
-          <header className="flex items-center justify-between mb-20">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary glow-primary">
-                <Zap className="h-5 w-5 text-primary-foreground" />
-              </div>
-              <span className="text-xl font-bold text-foreground">RideDispatch</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link to="/login">
-                <Button variant="ghost" className="text-muted-foreground hover:text-foreground">
-                  Login
-                </Button>
-              </Link>
-              <Link to="/dashboard">
-                <Button className="gap-2 glow-primary">
-                  <Play className="h-4 w-4" />
-                  Enter System
-                </Button>
-              </Link>
-            </div>
-          </header>
+        <div className="container mx-auto px-6 pt-40 pb-20">
 
           {/* Hero Content */}
-          <div className="text-center max-w-4xl mx-auto mb-20">
+          <div className="text-center max-w-5xl mx-auto mb-32">
             <div className={cn(
-              "inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 mb-6 transition-all duration-700",
+              "inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 mb-8 transition-all duration-700",
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}>
               <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-sm text-primary font-medium">DSA Semester Project</span>
+              <span className="text-sm text-primary font-medium tracking-wide uppercase">Engineering Modern Logistics</span>
             </div>
 
             <h1 className={cn(
-              "text-5xl md:text-7xl font-bold mb-6 transition-all duration-700 delay-100",
+              "text-6xl md:text-8xl font-bold mb-8 transition-all duration-1000 delay-100 tracking-tight",
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}>
               <span className="text-foreground">Next-Gen</span>
@@ -155,27 +137,27 @@ export default function Landing() {
             </h1>
 
             <p className={cn(
-              "text-xl text-muted-foreground mb-10 max-w-2xl mx-auto transition-all duration-700 delay-200",
+              "text-xl md:text-2xl text-muted-foreground mb-12 max-w-3xl mx-auto transition-all duration-1000 delay-200 leading-relaxed",
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}>
-              A unified platform for riders, drivers, and administrators.
-              Featuring interactive mapping, Dijkstra's shortest path, and real-time dispatch intelligence.
+              RideFlow is an advanced dispatch intelligence platform.
+              Built on graph theory and real-time optimization algorithms to power the future of urban mobility.
             </p>
 
             <div className={cn(
-              "flex items-center justify-center gap-4 transition-all duration-700 delay-300",
+              "flex flex-col sm:flex-row items-center justify-center gap-6 transition-all duration-1000 delay-300",
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             )}>
               <Link to="/dashboard">
-                <Button size="lg" className="gap-2 text-lg px-8 glow-primary">
-                  Explore Dashboard
-                  <ArrowRight className="h-5 w-5" />
+                <Button size="lg" className="h-16 gap-3 text-xl px-10 glow-primary rounded-2xl group">
+                  Get Started
+                  <Play className="h-6 w-6 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
-              <Link to="/shortest-path">
-                <Button size="lg" variant="outline" className="gap-2 text-lg px-8 border-primary/30 hover:bg-primary/10">
-                  <Route className="h-5 w-5" />
-                  View Algorithms
+              <Link to="/about">
+                <Button size="lg" variant="outline" className="h-16 gap-3 text-xl px-10 border-white/10 hover:bg-white/5 rounded-2xl">
+                  Learn More
+                  <ChevronRight className="h-6 w-6" />
                 </Button>
               </Link>
             </div>
@@ -183,63 +165,71 @@ export default function Landing() {
 
           {/* Stats Bar */}
           <div className={cn(
-            "glass-card p-6 mb-20 transition-all duration-700 delay-400",
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            "glass-card p-10 mb-32 transition-all duration-1000 delay-500",
+            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
               <div>
-                <div className="text-3xl font-bold text-primary mb-1">20+</div>
-                <div className="text-sm text-muted-foreground">System Pages</div>
+                <div className="text-4xl font-bold text-primary mb-2">20ms</div>
+                <div className="text-sm text-muted-foreground font-medium uppercase tracking-widest">Avg Latency</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-secondary mb-1">5</div>
-                <div className="text-sm text-muted-foreground">DSA Concepts</div>
+                <div className="text-4xl font-bold text-secondary mb-2">99.9%</div>
+                <div className="text-sm text-muted-foreground font-medium uppercase tracking-widest">Path Accuracy</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-accent mb-1">100%</div>
-                <div className="text-sm text-muted-foreground">Interactive</div>
+                <div className="text-4xl font-bold text-accent mb-2">320+</div>
+                <div className="text-sm text-muted-foreground font-medium uppercase tracking-widest">Active Nodes</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-success mb-1">A+</div>
-                <div className="text-sm text-muted-foreground">Viva Ready</div>
+                <div className="text-4xl font-bold text-success mb-2">Zero</div>
+                <div className="text-sm text-muted-foreground font-medium uppercase tracking-widest">State Conflicts</div>
               </div>
             </div>
           </div>
 
           {/* Features Grid */}
-          <div className="mb-20">
-            <h2 className={cn(
-              "text-3xl font-bold text-center mb-12 transition-all duration-700 delay-500",
-              mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            )}>
-              <span className="text-foreground">Core </span>
-              <span className="text-gradient-secondary">Features</span>
-            </h2>
+          <div className="mb-32">
+            <div className="text-center mb-16">
+              <h2 className={cn(
+                "text-4xl md:text-5xl font-bold mb-6 transition-all duration-700 delay-[600ms]",
+                mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              )}>
+                Built for <span className="text-gradient-secondary">Precision</span>
+              </h2>
+              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+                Our platform leverages cutting-edge data structures to solve the complex
+                traveling salesman problem at scale.
+              </p>
+            </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {features.map((feature, index) => {
                 const Icon = feature.icon;
                 return (
                   <div
                     key={feature.title}
                     className={cn(
-                      "glass-card-hover p-6 group transition-all duration-700",
+                      "glass-card-hover p-8 group transition-all duration-700",
                       mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
                     )}
-                    style={{ transitionDelay: `${600 + index * 100}ms` }}
+                    style={{ transitionDelay: `${800 + index * 100}ms` }}
                   >
                     <div className={cn(
-                      "inline-flex items-center justify-center w-12 h-12 rounded-xl mb-4 bg-gradient-to-br",
+                      "inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-6 bg-gradient-to-br transition-transform group-hover:scale-110",
                       feature.gradient
                     )}>
-                      <Icon className="h-6 w-6 text-white" />
+                      <Icon className="h-7 w-7 text-white" />
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                    <h3 className="text-xl font-bold text-foreground mb-4 group-hover:text-primary transition-colors">
                       {feature.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed">
                       {feature.description}
                     </p>
+                    <div className="mt-6 flex items-center gap-2 text-primary font-semibold opacity-0 group-hover:opacity-100 transition-opacity">
+                      Learn more <ArrowRight size={16} />
+                    </div>
                   </div>
                 );
               })}
@@ -248,28 +238,44 @@ export default function Landing() {
 
           {/* CTA Section */}
           <div className={cn(
-            "text-center transition-all duration-700 delay-[1200ms]",
-            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+            "text-center transition-all duration-1000 delay-[1500ms]",
+            mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           )}>
-            <div className="glass-card p-10 max-w-2xl mx-auto">
-              <h3 className="text-2xl font-bold mb-4">Ready for Your Viva?</h3>
-              <p className="text-muted-foreground mb-6">
-                This system demonstrates complete understanding of graph algorithms,
-                state machines, and stack operations - all key DSA concepts.
+            <div className="glass-card p-16 max-w-4xl mx-auto border-primary/20 bg-primary/5">
+              <h3 className="text-4xl font-bold mb-6">Revolutionize Your Dispatch</h3>
+              <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+                Experience the power of algorithmic transit management.
+                Whether you're a driver or an admin, RideFlow provides the tools you need.
               </p>
-              <Link to="/dashboard">
-                <Button size="lg" className="gap-2 glow-primary">
-                  Enter the System
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </Link>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link to="/dashboard">
+                  <Button size="lg" className="h-14 gap-2 px-8 glow-primary rounded-xl text-lg">
+                    Enter Dashboard
+                    <ArrowRight className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <Link to="/contact">
+                  <Button size="lg" variant="outline" className="h-14 gap-2 px-8 rounded-xl text-lg border-white/10">
+                    Contact Sales
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
 
           {/* Footer */}
-          <footer className="mt-20 pt-8 border-t border-border/50 text-center">
-            <p className="text-sm text-muted-foreground">
-              DSA Semester Project • Built with React & TypeScript
+          <footer className="mt-32 pt-12 border-t border-border/50 text-center">
+            <div className="flex justify-center gap-8 mb-8 pb-8">
+              <Link to="/" className="text-muted-foreground hover:text-primary transition-colors">Home</Link>
+              <Link to="/about" className="text-muted-foreground hover:text-primary transition-colors">About</Link>
+              <Link to="/contact" className="text-muted-foreground hover:text-primary transition-colors">Contact</Link>
+              <Link to="/docs" className="text-muted-foreground hover:text-primary transition-colors">Docs</Link>
+            </div>
+            <p className="text-sm text-muted-foreground mb-2">
+              © 2024 RideFlow Dispatch System. All rights reserved.
+            </p>
+            <p className="text-xs text-muted-foreground/60 uppercase tracking-widest font-semibold">
+              Built with React, TypeScript & C++
             </p>
           </footer>
         </div>

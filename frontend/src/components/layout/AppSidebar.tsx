@@ -133,36 +133,43 @@ const userNavigation: NavGroup[] = [
 
 import { ModeToggle } from "@/components/mode-toggle";
 
-export function AppSidebar() {
+interface AppSidebarProps {
+  onNavigate?: () => void;
+  isMobile?: boolean;
+}
+
+export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
   const { role } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
   const navigation = role === "admin" ? adminNavigation : role === "driver" ? driverNavigation : userNavigation;
 
+  const sidebarCollapsed = isMobile ? false : collapsed;
+
   return (
     <aside
       className={cn(
         "relative flex h-screen flex-col border-r border-sidebar-border bg-sidebar transition-all duration-300",
-        collapsed ? "w-16" : "w-64"
+        isMobile ? "w-full" : sidebarCollapsed ? "w-16" : "w-64"
       )}
     >
       {/* Logo */}
       <div className="flex h-16 items-center justify-between border-b border-sidebar-border px-4">
-        {!collapsed && (
+        {!sidebarCollapsed && (
           <div className="flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Zap className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-sidebar-foreground">RideDispatch</span>
+            <span className="font-semibold text-sidebar-foreground">RideFlow</span>
           </div>
         )}
-        {collapsed && (
+        {sidebarCollapsed && (
           <div className="mx-auto flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
             <Zap className="h-4 w-4 text-primary-foreground" />
           </div>
         )}
-        {!collapsed && <ModeToggle />}
+        {!sidebarCollapsed && <ModeToggle />}
       </div>
 
       {/* Navigation */}
@@ -170,7 +177,7 @@ export function AppSidebar() {
         <nav className="flex flex-col gap-6">
           {navigation.map((group) => (
             <div key={group.title}>
-              {!collapsed && (
+              {!sidebarCollapsed && (
                 <h3 className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   {group.title}
                 </h3>
@@ -184,6 +191,7 @@ export function AppSidebar() {
                     <NavLink
                       key={item.href}
                       to={item.href}
+                      onClick={onNavigate}
                       className={cn(
                         "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
                         isActive
@@ -197,7 +205,7 @@ export function AppSidebar() {
                           isActive ? "text-sidebar-primary" : "text-muted-foreground group-hover:text-sidebar-accent-foreground"
                         )}
                       />
-                      {!collapsed && (
+                      {!sidebarCollapsed && (
                         <>
                           <span className="flex-1">{item.title}</span>
                           {item.badge && (
@@ -210,7 +218,7 @@ export function AppSidebar() {
                     </NavLink>
                   );
 
-                  if (collapsed) {
+                  if (sidebarCollapsed) {
                     return (
                       <Tooltip key={item.href} delayDuration={0}>
                         <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
@@ -235,23 +243,25 @@ export function AppSidebar() {
       </ScrollArea>
 
       {/* Collapse Button */}
-      <div className="border-t border-sidebar-border p-2">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="w-full justify-center text-muted-foreground hover:text-sidebar-foreground"
-          onClick={() => setCollapsed(!collapsed)}
-        >
-          {collapsed ? (
-            <ChevronRight className="h-4 w-4" />
-          ) : (
-            <>
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              <span>Collapse</span>
-            </>
-          )}
-        </Button>
-      </div>
+      {!isMobile && (
+        <div className="border-t border-sidebar-border p-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-center text-muted-foreground hover:text-sidebar-foreground"
+            onClick={() => setCollapsed(!collapsed)}
+          >
+            {sidebarCollapsed ? (
+              <ChevronRight className="h-4 w-4" />
+            ) : (
+              <>
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                <span>Collapse</span>
+              </>
+            )}
+          </Button>
+        </div>
+      )}
     </aside>
   );
 }

@@ -22,29 +22,53 @@ const INITIAL_OPERATIONS = [
     { id: 5, type: "DISPATCH", target: "T-1009", time: "14:30:00", desc: "Dispatched T-1009 to Alex Rivera" },
 ];
 
+import { api } from "@/services/api";
+
 const CancellationRollback = () => {
     const [stack, setStack] = useState(INITIAL_OPERATIONS);
     const [rollbackCount, setRollbackCount] = useState([1]);
+    const [isRollingBack, setIsRollingBack] = useState(false);
 
-    const handleUndo = () => {
-        if (stack.length === 0) return;
+    const handleUndo = async () => {
+        if (stack.length === 0 || isRollingBack) return;
 
-        const lastOp = stack[stack.length - 1];
-        setStack(stack.slice(0, -1));
-        toast.success(`Rolled back: ${lastOp.type}`, {
-            description: lastOp.desc,
-        });
+        setIsRollingBack(true);
+        try {
+            await api.undoAction();
+            const lastOp = stack[stack.length - 1];
+            setStack(stack.slice(0, -1));
+            toast.success(`Rolled back: ${lastOp.type}`, {
+                description: lastOp.desc,
+            });
+        } catch (error) {
+            toast.error("Failed to perform rollback on the backend.");
+        } finally {
+            setIsRollingBack(false);
+        }
     };
 
-    const handleBulkRollback = () => {
+    const handleBulkRollback = async () => {
         const count = rollbackCount[0];
-        if (stack.length < count) return;
+        if (stack.length < count || isRollingBack) return;
 
-        const rolledBack = stack.slice(-count).reverse();
-        setStack(stack.slice(0, -count));
-        toast.success(`Rolled back ${count} operations`, {
-            description: `Successfully reverted ${count} system states.`,
-        });
+        setIsRollingBack(true);
+        try {
+            // Perform multiple undos if the backend only supports single undo
+            // Or just call it once if the backend supports bulk (current backend is single)
+            for (let i = 0; i < count; i++) {
+                await api.undoAction();
+            }
+
+            const rolledBack = stack.slice(-count).reverse();
+            setStack(stack.slice(0, -count));
+            toast.success(`Rolled back ${count} operations`, {
+                description: `Successfully reverted ${count} system states.`,
+            });
+        } catch (error) {
+            toast.error("Bulk rollback failed midway.");
+        } finally {
+            setIsRollingBack(false);
+        }
     };
 
     return (

@@ -88,8 +88,22 @@ import { useAuth } from "@/lib/auth-context";
 import { Link } from "react-router-dom";
 import DriverDashboard from "./DriverDashboard";
 import UserDashboard from "./UserDashboard";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/services/api";
 
 const AdminDashboardContent = () => {
+  const { data: metrics, isLoading: metricsLoading } = useQuery({
+    queryKey: ["metrics"],
+    queryFn: api.getMetrics,
+    refetchInterval: 5000,
+  });
+
+  const { data: status, isLoading: statusLoading } = useQuery({
+    queryKey: ["status"],
+    queryFn: api.getStatus,
+    refetchInterval: 5000,
+  });
+
   return (
     <div className="p-6 lg:p-8 space-y-8">
       {/* Header */}
@@ -99,12 +113,26 @@ const AdminDashboardContent = () => {
           <p className="text-muted-foreground mt-1">Real-time overview of the dispatch system</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/20 border border-success/30">
+          <div className={cn(
+            "flex items-center gap-2 px-3 py-1.5 rounded-full border",
+            status?.status === "online" ? "bg-success/20 border-success/30" : "bg-destructive/20 border-destructive/30"
+          )}>
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-success"></span>
+              <span className={cn(
+                "absolute inline-flex h-full w-full rounded-full opacity-75",
+                status?.status === "online" ? "animate-ping bg-success" : "bg-destructive"
+              )}></span>
+              <span className={cn(
+                "relative inline-flex rounded-full h-2 w-2",
+                status?.status === "online" ? "bg-success" : "bg-destructive"
+              )}></span>
             </span>
-            <span className="text-sm font-medium text-success">System Online</span>
+            <span className={cn(
+              "text-sm font-medium",
+              status?.status === "online" ? "text-success" : "text-destructive"
+            )}>
+              System {status?.status === "online" ? "Online" : "Offline"}
+            </span>
           </div>
         </div>
       </div>
@@ -113,7 +141,7 @@ const AdminDashboardContent = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Active Trips"
-          value={24}
+          value={metricsLoading ? "..." : (status?.drivers || 0)}
           change={12}
           trend="up"
           icon={Navigation}
@@ -121,27 +149,23 @@ const AdminDashboardContent = () => {
         />
         <StatCard
           title="Available Drivers"
-          value={18}
+          value={metricsLoading ? "..." : (status?.drivers || 0)}
           change={5}
           trend="up"
           icon={Car}
           color="success"
         />
         <StatCard
-          title="Completed Today"
-          value={156}
-          change={8}
-          trend="up"
-          icon={CheckCircle}
-          color="accent"
+          title="Dispatch Latency"
+          value={metricsLoading ? "..." : (metrics?.dispatchLatency || "0ms")}
+          icon={Zap}
+          color="warning"
         />
         <StatCard
-          title="Cancelled"
-          value={7}
-          change={3}
-          trend="down"
-          icon={XCircle}
-          color="destructive"
+          title="Active Nodes"
+          value={metricsLoading ? "..." : (metrics?.activeNodes || 0)}
+          icon={Activity}
+          color="accent"
         />
       </div>
 
@@ -219,17 +243,20 @@ const AdminDashboardContent = () => {
             <div className="space-y-3">
               <div>
                 <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-muted-foreground">CPU Usage</span>
-                  <span className="text-foreground font-medium">45%</span>
+                  <span className="text-muted-foreground">Engine Load</span>
+                  <span className="text-foreground font-medium">{metrics?.coreEngineLoad || 0}%</span>
                 </div>
                 <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full w-[45%] rounded-full bg-gradient-to-r from-primary to-accent" />
+                  <div
+                    className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-1000"
+                    style={{ width: `${metrics?.coreEngineLoad || 0}%` }}
+                  />
                 </div>
               </div>
               <div>
                 <div className="flex items-center justify-between text-sm mb-1">
                   <span className="text-muted-foreground">Memory</span>
-                  <span className="text-foreground font-medium">62%</span>
+                  <span className="text-foreground font-medium">{metrics?.memoryAllocation || "0 MB"}</span>
                 </div>
                 <div className="h-2 rounded-full bg-muted overflow-hidden">
                   <div className="h-full w-[62%] rounded-full bg-gradient-to-r from-secondary to-primary" />

@@ -1,0 +1,9 @@
+# Build artifacts
+*.o
+rideshare_server
+rideshare
+
+# Dependencies
+include/crow_all.h
+include/httplib.h
+include/json.hpp

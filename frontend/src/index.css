@@ -1,0 +1,414 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Ride-Sharing Dispatch System - Glassmorphism Dark Theme */
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222 47% 11%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
+
+    --primary: 199 89% 48%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 199 89% 48%;
+
+    --radius: 0.75rem;
+
+    /* Glassmorphism specific */
+    --glass: 0 0% 100%;
+    --glass-border: 214.3 31.8% 91.4%;
+    --glass-highlight: 199 89% 48%;
+
+    /* Status colors */
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 222 47% 11%;
+    --info: 199 89% 48%;
+    --info-foreground: 222 47% 11%;
+
+    /* Graph colors */
+    --node-default: 217 33% 40%;
+    --node-visited: 262 83% 58%;
+    --node-current: 199 89% 48%;
+    --node-path: 142 71% 45%;
+    --edge-default: 217 33% 80%;
+    --edge-path: 142 71% 45%;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 199 89% 48%;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+
+    --card: 222 47% 13%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222 47% 13%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 199 89% 48%;
+    --primary-foreground: 222 47% 11%;
+
+    --secondary: 262 83% 58%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217 33% 22%;
+    --input: 217 33% 17%;
+    --ring: 199 89% 48%;
+
+    /* Glassmorphism specific */
+    --glass: 222 47% 16%;
+    --glass-border: 217 33% 28%;
+    --glass-highlight: 199 89% 48%;
+
+    /* Sidebar */
+    --sidebar-background: 222 47% 8%;
+    --sidebar-foreground: 210 40% 90%;
+    --sidebar-primary: 199 89% 48%;
+    --sidebar-primary-foreground: 222 47% 11%;
+    --sidebar-accent: 222 47% 14%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 18%;
+    --sidebar-ring: 199 89% 48%;
+
+    /* Graph colors */
+    --edge-default: 217 33% 30%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+@layer components {
+
+  /* Glassmorphism Card */
+  .glass-card {
+    @apply relative overflow-hidden rounded-xl border border-glass-border bg-glass/80 backdrop-blur-xl;
+    box-shadow:
+      0 8px 32px 0 hsla(222, 47%, 5%, 0.4),
+      inset 0 1px 0 0 hsla(210, 40%, 98%, 0.05);
+  }
+
+  .glass-card-hover {
+    @apply glass-card transition-all duration-300;
+  }
+
+  .glass-card-hover:hover {
+    @apply border-glass-highlight/50;
+    box-shadow:
+      0 8px 32px 0 hsla(199, 89%, 48%, 0.15),
+      inset 0 1px 0 0 hsla(210, 40%, 98%, 0.1);
+    transform: translateY(-2px);
+  }
+
+  /* Glowing effects */
+  .glow-primary {
+    box-shadow: 0 0 20px hsla(199, 89%, 48%, 0.3);
+  }
+
+  .glow-secondary {
+    box-shadow: 0 0 20px hsla(262, 83%, 58%, 0.3);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px hsla(172, 66%, 50%, 0.3);
+  }
+
+  .glow-success {
+    box-shadow: 0 0 20px hsla(142, 71%, 45%, 0.3);
+  }
+
+  /* Status badges */
+  .status-badge {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+
+  .status-available {
+    @apply bg-success/20 text-success;
+  }
+
+  .status-assigned {
+    @apply bg-warning/20 text-warning;
+  }
+
+  .status-offline {
+    @apply bg-muted text-muted-foreground;
+  }
+
+  .status-active {
+    @apply bg-primary/20 text-primary;
+  }
+
+  /* Animated gradient background */
+  .gradient-bg {
+    background: linear-gradient(135deg,
+        hsl(var(--background)) 0%,
+        hsl(var(--muted)) 50%,
+        hsl(var(--background)) 100%);
+  }
+
+  .gradient-mesh {
+    background-image:
+      radial-gradient(at 40% 20%, hsla(var(--primary), 0.1) 0px, transparent 50%),
+      radial-gradient(at 80% 0%, hsla(var(--secondary), 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 50%, hsla(var(--accent), 0.05) 0px, transparent 50%),
+      radial-gradient(at 80% 50%, hsla(var(--primary), 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(var(--secondary), 0.1) 0px, transparent 50%);
+  }
+
+  /* Text gradients */
+  .text-gradient-primary {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(199, 89%, 48%), hsl(172, 66%, 50%));
+  }
+
+  .text-gradient-secondary {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(199, 89%, 48%));
+  }
+
+  /* Animated pulse for live indicators */
+  .pulse-live {
+    @apply relative;
+  }
+
+  .pulse-live::before {
+    content: '';
+    @apply absolute inset-0 rounded-full bg-current opacity-75;
+    animation: pulse-ring 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(1);
+      opacity: 0.75;
+    }
+
+    50% {
+      transform: scale(1.5);
+      opacity: 0;
+    }
+
+    100% {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
+  /* Graph node styles */
+  .graph-node {
+    @apply rounded-full border-2 transition-all duration-300;
+  }
+
+  .graph-node-default {
+    @apply border-node-default bg-node-default/30;
+  }
+
+  .graph-node-visited {
+    @apply border-node-visited bg-node-visited/30 glow-secondary;
+  }
+
+  .graph-node-current {
+    @apply border-node-current bg-node-current/30 glow-primary;
+  }
+
+  .graph-node-path {
+    @apply border-node-path bg-node-path/30 glow-success;
+  }
+
+  /* Scrollbar styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-border;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+}
+
+@layer utilities {
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  @keyframes float {
+
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .animate-glow {
+    animation: glow 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes glow {
+    from {
+      box-shadow: 0 0 10px hsla(199, 89%, 48%, 0.2);
+    }
+
+    to {
+      box-shadow: 0 0 20px hsla(199, 89%, 48%, 0.4);
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out;
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out;
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  /* Staggered animation delays */
+  .delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .delay-500 {
+    animation-delay: 500ms;
+  }
+
+  /* Route animation for driver paths */
+  .animate-dash {
+    animation: dash 0.8s linear infinite;
+  }
+
+  @keyframes dash {
+    to {
+      stroke-dashoffset: -20;
+    }
+  }
+
+  .animate-dash-reverse {
+    animation: dash-reverse 0.8s linear infinite;
+  }
+
+  @keyframes dash-reverse {
+    to {
+      stroke-dashoffset: 20;
+    }
+  }
+
+  /* Driver car rotation transition */
+  .driver-car {
+    transition: transform 0.3s ease-out;
+  }
+
+  /* Route glow effect */
+  .route-glow {
+    filter: drop-shadow(0 0 4px currentColor);
+  }
+}

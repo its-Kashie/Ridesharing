@@ -139,7 +139,7 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
@@ -173,16 +173,16 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
       </div>
 
       {/* Navigation */}
-      <ScrollArea className="flex-1 px-2 py-4">
-        <nav className="flex flex-col gap-6">
+      <ScrollArea className="flex-1 px-3 py-6">
+        <nav className="flex flex-col gap-8">
           {navigation.map((group) => (
-            <div key={group.title}>
+            <div key={group.title} className="space-y-4">
               {!sidebarCollapsed && (
-                <h3 className="mb-2 px-3 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <h3 className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
                   {group.title}
                 </h3>
               )}
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1.5">
                 {group.items.map((item) => {
                   const isActive = location.pathname === item.href;
                   const Icon = item.icon;
@@ -193,23 +193,24 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
                       to={item.href}
                       onClick={onNavigate}
                       className={cn(
-                        "group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
+                        "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition-all duration-300 relative overflow-hidden",
                         isActive
-                          ? "bg-sidebar-accent text-sidebar-primary"
-                          : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                          ? "bg-primary/20 text-primary shadow-[inset_0_0_20px_rgba(var(--primary),0.1)]"
+                          : "text-white/40 hover:bg-white/5 hover:text-white"
                       )}
                     >
+                      {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full" />}
                       <Icon
                         className={cn(
-                          "h-4 w-4 shrink-0 transition-colors",
-                          isActive ? "text-sidebar-primary" : "text-muted-foreground group-hover:text-sidebar-accent-foreground"
+                          "h-5 w-5 shrink-0 transition-all duration-300",
+                          isActive ? "text-primary scale-110" : "text-white/20 group-hover:text-white group-hover:scale-110"
                         )}
                       />
                       {!sidebarCollapsed && (
                         <>
-                          <span className="flex-1">{item.title}</span>
+                          <span className="flex-1 uppercase tracking-widest">{item.title}</span>
                           {item.badge && (
-                            <span className="rounded-full bg-secondary/20 px-2 py-0.5 text-[10px] font-semibold text-secondary">
+                            <span className="rounded-lg bg-white/5 border border-white/5 px-1.5 py-0.5 text-[8px] font-black text-white/40 group-hover:text-white transition-colors">
                               {item.badge}
                             </span>
                           )}
@@ -222,13 +223,8 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
                     return (
                       <Tooltip key={item.href} delayDuration={0}>
                         <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
-                        <TooltipContent side="right" className="flex items-center gap-2">
+                        <TooltipContent side="right" className="bg-[#0a0b14] border-white/10 text-white font-bold text-[10px] uppercase tracking-widest">
                           {item.title}
-                          {item.badge && (
-                            <span className="rounded-full bg-secondary/20 px-2 py-0.5 text-[10px] font-semibold text-secondary">
-                              {item.badge}
-                            </span>
-                          )}
                         </TooltipContent>
                       </Tooltip>
                     );
@@ -242,22 +238,47 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
         </nav>
       </ScrollArea>
 
+      {/* User Profile / Logout */}
+      <div className="mt-auto border-t border-white/5 p-4 bg-white/5">
+        <div className={cn("flex items-center gap-3", sidebarCollapsed && "justify-center")}>
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-white/10 overflow-hidden">
+            {user?.avatar ? <img src={user.avatar} className="h-full w-full object-cover" /> : <Users className="h-5 w-5 text-white/50" />}
+          </div>
+          {!sidebarCollapsed && (
+            <div className="flex-1 min-w-0">
+              <div className="text-xs font-black text-white truncate uppercase tracking-tighter italic">{user?.name || "Guest User"}</div>
+              <div className="text-[9px] font-bold text-white/30 truncate uppercase tracking-widest">{user?.role || "external"} • ACTIVE</div>
+            </div>
+          )}
+          {!sidebarCollapsed && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                const { logout } = useAuth(); // or just use the logout from scope if available
+                window.location.href = "/login";
+              }}
+              className="text-white/20 hover:text-destructive hover:bg-destructive/10 shrink-0"
+            >
+              <LogIn className="h-4 w-4 rotate-180" />
+            </Button>
+          )}
+        </div>
+      </div>
+
       {/* Collapse Button */}
       {!isMobile && (
-        <div className="border-t border-sidebar-border p-2">
+        <div className="p-2">
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-center text-muted-foreground hover:text-sidebar-foreground"
+            className="w-full justify-center text-white/20 hover:text-white"
             onClick={() => setCollapsed(!collapsed)}
           >
             {sidebarCollapsed ? (
               <ChevronRight className="h-4 w-4" />
             ) : (
-              <>
-                <ChevronLeft className="h-4 w-4 mr-2" />
-                <span>Collapse</span>
-              </>
+              <ChevronLeft className="h-4 w-4" />
             )}
           </Button>
         </div>
@@ -265,3 +286,4 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
     </aside>
   );
 }
+

@@ -6,114 +6,71 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222 47% 11%;
+    --background: 230 25% 4%;
+    --foreground: 0 0% 100%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card: 230 25% 7%;
+    --card-foreground: 0 0% 100%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover: 230 25% 7%;
+    --popover-foreground: 0 0% 100%;
 
-    --primary: 199 89% 48%;
+    --primary: 263.4 70% 50.4%; /* Purple */
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 262 83% 58%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 190 90% 50%; /* Cyan */
+    --secondary-foreground: 230 40% 10%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    --muted: 230 25% 12%;
+    --muted-foreground: 230 10% 70%;
 
-    --accent: 172 66% 50%;
-    --accent-foreground: 222 47% 11%;
+    --accent: 280 80% 60%; /* Violet */
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 199 89% 48%;
+    --border: 230 25% 15%;
+    --input: 230 25% 15%;
+    --ring: 263.4 70% 50.4%;
 
-    --radius: 0.75rem;
+    --radius: 1rem;
 
     /* Glassmorphism specific */
-    --glass: 0 0% 100%;
-    --glass-border: 214.3 31.8% 91.4%;
-    --glass-highlight: 199 89% 48%;
+    --glass: 230 25% 8%;
+    --glass-border: 230 25% 20%;
+    --glass-highlight: 263.4 70% 50.4%;
 
     /* Status colors */
     --success: 142 71% 45%;
     --success-foreground: 210 40% 98%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 222 47% 11%;
-    --info: 199 89% 48%;
-    --info-foreground: 222 47% 11%;
+    --warning: 48 96% 53%;
+    --warning-foreground: 230 40% 10%;
+    --info: 190 90% 50%;
+    --info-foreground: 230 40% 10%;
 
     /* Graph colors */
-    --node-default: 217 33% 40%;
-    --node-visited: 262 83% 58%;
-    --node-current: 199 89% 48%;
+    --node-default: 230 25% 20%;
+    --node-visited: 263.4 70% 50.4%;
+    --node-current: 190 90% 50%;
     --node-path: 142 71% 45%;
-    --edge-default: 217 33% 80%;
+    --edge-default: 230 25% 15%;
     --edge-path: 142 71% 45%;
 
     /* Sidebar */
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 199 89% 48%;
+    --sidebar-background: 230 25% 5%;
+    --sidebar-foreground: 230 10% 80%;
+    --sidebar-primary: 263.4 70% 50.4%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 230 25% 10%;
+    --sidebar-accent-foreground: 0 0% 100%;
+    --sidebar-border: 230 25% 12%;
+    --sidebar-ring: 263.4 70% 50.4%;
   }
 
+  /* Force dark mode by default as it's more premium for this project */
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-
-    --card: 222 47% 13%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222 47% 13%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 199 89% 48%;
-    --primary-foreground: 222 47% 11%;
-
-    --secondary: 262 83% 58%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 172 66% 50%;
-    --accent-foreground: 222 47% 11%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217 33% 22%;
-    --input: 217 33% 17%;
-    --ring: 199 89% 48%;
-
-    /* Glassmorphism specific */
-    --glass: 222 47% 16%;
-    --glass-border: 217 33% 28%;
-    --glass-highlight: 199 89% 48%;
-
-    /* Sidebar */
-    --sidebar-background: 222 47% 8%;
-    --sidebar-foreground: 210 40% 90%;
-    --sidebar-primary: 199 89% 48%;
-    --sidebar-primary-foreground: 222 47% 11%;
-    --sidebar-accent: 222 47% 14%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --sidebar-border: 217 33% 18%;
-    --sidebar-ring: 199 89% 48%;
-
-    /* Graph colors */
-    --edge-default: 217 33% 30%;
+    /* Variables already set to dark-friendly values above */
   }
 }
 
@@ -123,7 +80,13 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
+    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(263, 70%, 50%, 0.15) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(190, 90%, 50%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(280, 80%, 60%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(263, 70%, 50%, 0.05) 0px, transparent 50%);
+    background-attachment: fixed;
   }
 }
 

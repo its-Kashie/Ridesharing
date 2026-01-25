@@ -9,7 +9,8 @@ import {
   Clock,
   Zap,
   ArrowUpRight,
-  ArrowDownRight
+  ArrowDownRight,
+  ShieldCheck
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -92,47 +93,41 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/api";
 
 const AdminDashboardContent = () => {
+  const { user } = useAuth();
   const { data: metrics, isLoading: metricsLoading } = useQuery({
     queryKey: ["metrics"],
     queryFn: api.getMetrics,
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   const { data: status, isLoading: statusLoading } = useQuery({
     queryKey: ["status"],
     queryFn: api.getStatus,
-    refetchInterval: 5000,
+    refetchInterval: 2000,
   });
 
   return (
-    <div className="p-6 lg:p-8 space-y-8">
+    <div className="p-6 lg:p-8 space-y-8 animate-fade-in">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Admin Dashboard</h1>
-          <p className="text-muted-foreground mt-1">Real-time overview of the dispatch system</p>
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="flex items-center gap-4">
+          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
+            <ShieldCheck className="h-8 w-8 text-white" />
+          </div>
+          <div>
+            <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Control Center</h1>
+            <p className="text-white/40 text-sm font-medium tracking-widest uppercase">Operator: {user?.name} [Tier 1]</p>
+          </div>
         </div>
-        <div className="flex items-center gap-2">
-          <div className={cn(
-            "flex items-center gap-2 px-3 py-1.5 rounded-full border",
-            status?.status === "online" ? "bg-success/20 border-success/30" : "bg-destructive/20 border-destructive/30"
-          )}>
-            <span className="relative flex h-2 w-2">
-              <span className={cn(
-                "absolute inline-flex h-full w-full rounded-full opacity-75",
-                status?.status === "online" ? "animate-ping bg-success" : "bg-destructive"
-              )}></span>
-              <span className={cn(
-                "relative inline-flex rounded-full h-2 w-2",
-                status?.status === "online" ? "bg-success" : "bg-destructive"
-              )}></span>
-            </span>
-            <span className={cn(
-              "text-sm font-medium",
-              status?.status === "online" ? "text-success" : "text-destructive"
-            )}>
-              System {status?.status === "online" ? "Online" : "Offline"}
-            </span>
+
+        <div className="flex items-center gap-4">
+          {/* System Pulse */}
+          <div className="glass-card px-4 py-2 flex items-center gap-3 border-white/5 bg-white/5">
+            <div className="flex h-3 w-3 relative">
+              <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></div>
+              <div className="relative inline-flex rounded-full h-3 w-3 bg-success shadow-[0_0_10px_#22c55e]"></div>
+            </div>
+            <span className="text-[10px] font-bold text-white/70 tracking-widest uppercase">Network Synchronization: Active</span>
           </div>
         </div>
       </div>
@@ -320,7 +315,7 @@ const AdminDashboardContent = () => {
 };
 
 export default function Dashboard() {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
 
   if (role === "driver") return <DriverDashboard />;
   if (role === "user") return <UserDashboard />;

@@ -124,8 +124,8 @@ int main() {
         add_cors_headers(res);
     });
 
-    std::cout << "Starting Ride-Sharing API Server on port 8080..." << std::endl;
-    svr.listen("0.0.0.0", 8080);
+    std::cout << "Starting Ride-Sharing API Server on port 8082..." << std::endl;
+    svr.listen("0.0.0.0", 8082);
 
     return 0;
 }

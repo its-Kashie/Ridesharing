@@ -61,44 +61,36 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-[#05060f]">
-      {/* Dynamic Background Elements */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 rounded-full blur-[120px] animate-pulse" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-secondary/10 rounded-full blur-[120px] animate-pulse delay-700" />
-
+    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-background">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md relative z-10"
       >
         {/* Logo */}
-        <div className="text-center mb-10">
-          <Link to="/" className="inline-flex items-center gap-4 group">
-            <motion.div
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent shadow-[0_0_30px_-5px_hsla(var(--primary),0.6)]"
-            >
-              <Zap className="h-8 w-8 text-white fill-white" />
-            </motion.div>
+        <div className="text-center mb-8">
+          <Link to="/" className="inline-flex items-center gap-3">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 text-primary">
+              <Zap className="h-6 w-6" />
+            </div>
             <div className="text-left">
-              <span className="text-3xl font-black tracking-tighter text-white block leading-none">RIDEFLOW</span>
-              <span className="text-[10px] uppercase tracking-[0.2em] text-primary font-bold">Next-Gen Mobility</span>
+              <span className="text-2xl font-bold tracking-tight text-white block">RideFlow</span>
             </div>
           </Link>
         </div>
 
         {/* Form Card */}
-        <div className="glass-card p-8 border-white/10 bg-white/5 backdrop-blur-2xl shadow-2xl">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
-              {isLogin ? "Welcome back" : "Get started"}
+        <div className="glass-card p-8">
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold text-white mb-2">
+              {isLogin ? "Welcome back" : "Create an account"}
             </h1>
-            <p className="text-white/50 text-sm">
-              {isLogin ? "Enter your core credentials to initialize session" : "Register your identity on the RideFlow network"}
+            <p className="text-muted-foreground text-sm">
+              {isLogin ? "Enter your details to access your account" : "Get started with RideFlow today"}
             </p>
           </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit}>
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <AnimatePresence mode="wait">
               {!isLogin && (
                 <motion.div
@@ -107,16 +99,16 @@ export default function Login() {
                   exit={{ opacity: 0, height: 0 }}
                   className="space-y-2 overflow-hidden"
                 >
-                  <Label htmlFor="name" className="text-xs font-semibold text-white/70 uppercase tracking-wider">Full Name</Label>
-                  <div className="relative group">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 group-focus-within:text-primary transition-colors" />
+                  <Label htmlFor="name">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="name"
                       required
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                      placeholder="Identified Navigator"
-                      className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-12 rounded-xl"
+                      placeholder="Enter your name"
+                      className="pl-10 h-10 rounded-lg bg-background/50 border-input"
                     />
                   </div>
                 </motion.div>
@@ -124,41 +116,41 @@ export default function Login() {
             </AnimatePresence>
 
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-xs font-semibold text-white/70 uppercase tracking-wider">Email Protocol</Label>
-              <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 group-focus-within:text-primary transition-colors" />
+              <Label htmlFor="email">Email Address</Label>
+              <div className="relative">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="email"
                   type="email"
                   required
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  placeholder="nexus@rideflow.network"
-                  className="pl-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-12 rounded-xl"
+                  placeholder="name@example.com"
+                  className="pl-10 h-10 rounded-lg bg-background/50 border-input"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
               <div className="flex justify-between items-center">
-                <Label htmlFor="password" className="text-xs font-semibold text-white/70 uppercase tracking-wider">Security Key</Label>
-                {isLogin && <button type="button" className="text-[10px] text-primary/80 hover:text-primary transition-colors font-bold uppercase tracking-widest">Lost Key?</button>}
+                <Label htmlFor="password">Password</Label>
+                {isLogin && <button type="button" className="text-xs text-primary hover:underline">Forgot password?</button>}
               </div>
-              <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/30 group-focus-within:text-primary transition-colors" />
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                  placeholder="••••••••"
-                  className="pl-10 pr-10 bg-white/5 border-white/10 text-white placeholder:text-white/20 focus:border-primary/50 focus:ring-primary/20 h-12 rounded-xl"
+                  placeholder="Enter your password"
+                  className="pl-10 pr-10 h-10 rounded-lg bg-background/50 border-input"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
@@ -167,7 +159,7 @@ export default function Login() {
 
             {!isLogin && (
               <div className="space-y-3">
-                <Label className="text-xs font-semibold text-white/70 uppercase tracking-wider text-center block">Access Tier</Label>
+                <Label className="block text-sm font-medium">I am a...</Label>
                 <div className="grid grid-cols-3 gap-2">
                   {roles.map((r) => (
                     <button
@@ -175,14 +167,14 @@ export default function Login() {
                       type="button"
                       onClick={() => setSelectedRole(r.id as UserRole)}
                       className={cn(
-                        "flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-300",
+                        "flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-200",
                         selectedRole === r.id
-                          ? "border-primary bg-primary/20 text-white shadow-[0_0_15px_-5px_hsla(var(--primary),0.5)]"
-                          : "border-white/5 bg-white/5 text-white/40 hover:border-white/20 hover:bg-white/10"
+                          ? "border-primary bg-primary/10 text-primary"
+                          : "border-border bg-background/30 text-muted-foreground hover:bg-background/50"
                       )}
                     >
-                      <r.icon className={cn("h-5 w-5", selectedRole === r.id ? "text-primary" : "text-white/20")} />
-                      <div className="text-[10px] font-bold uppercase tracking-tighter">{r.label}</div>
+                      <r.icon className="h-5 w-5" />
+                      <div className="text-xs font-medium">{r.label}</div>
                     </button>
                   ))}
                 </div>
@@ -192,14 +184,14 @@ export default function Login() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full h-12 rounded-xl bg-gradient-to-r from-primary to-accent hover:opacity-90 text-white font-bold shadow-xl shadow-primary/20 border-none transition-all group"
+              className="w-full h-11 rounded-xl bg-primary hover:bg-primary/90 text-white font-medium transition-all"
             >
               {isLoading ? (
                 <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : (
-                <span className="flex items-center gap-2">
-                  {isLogin ? "INITIALIZE SESSION" : "CREATE IDENTITY"}
-                  <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                <span className="flex items-center justify-center gap-2">
+                  {isLogin ? "Sign In" : "Create Account"}
+                  <ArrowRight className="h-4 w-4" />
                 </span>
               )}
             </Button>
@@ -207,14 +199,14 @@ export default function Login() {
 
           {/* Quick Demo Access */}
           {isLogin && (
-            <div className="mt-8 pt-8 border-t border-white/5">
-              <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] text-center mb-4 text-center">Quick Access Demo Nodes</p>
+            <div className="mt-8 pt-6 border-t border-border">
+              <p className="text-xs text-muted-foreground text-center mb-3">Quick Demo Login</p>
               <div className="flex gap-2">
                 {roles.map((r) => (
                   <button
                     key={r.id}
                     onClick={() => fillDemo(r.id as UserRole)}
-                    className="flex-1 px-2 py-2 rounded-lg bg-white/5 border border-white/5 hover:border-primary/30 hover:bg-primary/5 text-[9px] font-bold text-white/40 hover:text-primary transition-all uppercase tracking-tighter"
+                    className="flex-1 px-2 py-1.5 rounded-md bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 text-xs font-medium text-secondary-foreground transition-colors"
                   >
                     {r.label}
                   </button>
@@ -223,24 +215,19 @@ export default function Login() {
             </div>
           )}
 
-          <div className="mt-8 text-center">
+          <div className="mt-6 text-center">
             <button
               type="button"
               onClick={() => setIsLogin(!isLogin)}
-              className="text-sm text-white/40 hover:text-primary transition-colors group"
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              {isLogin ? "New to the network? " : "Already registered? "}
-              <span className="font-bold text-primary group-hover:underline decoration-2 underline-offset-4">
-                {isLogin ? "Register Node" : "Sign In"}
+              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              <span className="font-medium text-primary hover:underline">
+                {isLogin ? "Sign up" : "Sign in"}
               </span>
             </button>
           </div>
         </div>
-
-        {/* Footer */}
-        <p className="text-center text-[10px] text-white/20 mt-8 font-bold tracking-[0.3em] uppercase">
-          Autonomous Mobility OS • v4.2.0 • Real-time Active
-        </p>
       </motion.div>
     </div>
   );

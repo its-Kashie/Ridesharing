@@ -107,33 +107,21 @@ const AdminDashboardContent = () => {
   });
 
   return (
-    <div className="p-6 lg:p-8 space-y-8 animate-fade-in">
+    <div className="p-4 md:p-6 space-y-6 animate-fade-in max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="h-16 w-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg shadow-primary/20">
-            <ShieldCheck className="h-8 w-8 text-white" />
-          </div>
-          <div>
-            <h1 className="text-4xl font-black text-white tracking-tighter uppercase italic">Control Center</h1>
-            <p className="text-white/40 text-sm font-medium tracking-widest uppercase">Operator: {user?.name} [Tier 1]</p>
-          </div>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard</h1>
+          <p className="text-muted-foreground">Welcome back, {user?.name}</p>
         </div>
-
-        <div className="flex items-center gap-4">
-          {/* System Pulse */}
-          <div className="glass-card px-4 py-2 flex items-center gap-3 border-white/5 bg-white/5">
-            <div className="flex h-3 w-3 relative">
-              <div className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75"></div>
-              <div className="relative inline-flex rounded-full h-3 w-3 bg-success shadow-[0_0_10px_#22c55e]"></div>
-            </div>
-            <span className="text-[10px] font-bold text-white/70 tracking-widest uppercase">Network Synchronization: Active</span>
-          </div>
+        <div className="flex items-center gap-2">
+          <span className="flex h-2 w-2 rounded-full bg-success"></span>
+          <span className="text-sm text-muted-foreground">System Online</span>
         </div>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="Active Trips"
           value={metricsLoading ? "..." : (status?.drivers || 0)}
@@ -151,7 +139,7 @@ const AdminDashboardContent = () => {
           color="success"
         />
         <StatCard
-          title="Dispatch Latency"
+          title="Avg Dispatch Time"
           value={metricsLoading ? "..." : (metrics?.dispatchLatency || "0ms")}
           icon={Zap}
           color="warning"
@@ -169,144 +157,73 @@ const AdminDashboardContent = () => {
         {/* Recent Activity */}
         <div className="lg:col-span-2 glass-card p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-foreground">Recent Activity</h2>
-            <span className="text-sm text-muted-foreground">Last 30 minutes</span>
+            <h2 className="text-lg font-semibold text-white">Recent Activity</h2>
           </div>
-          <div className="space-y-4">
+          <div className="space-y-1">
             {activities.map((activity, index) => {
               const style = activityStyles[activity.type];
               const Icon = style.icon;
               return (
                 <div
                   key={activity.id}
-                  className={cn(
-                    "flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors animate-slide-up",
-                  )}
-                  style={{ animationDelay: `${index * 50}ms` }}
+                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5"
                 >
-                  <div className={cn("p-2 rounded-lg", style.bg)}>
+                  <div className={cn("p-2.5 rounded-lg", style.bg)}>
                     <Icon className={cn("h-4 w-4", style.color)} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-foreground truncate">{activity.message}</p>
+                    <p className="text-sm font-medium text-white truncate">{activity.message}</p>
+                    <p className="text-xs text-muted-foreground">{activity.time}</p>
                   </div>
-                  <span className="text-xs text-muted-foreground whitespace-nowrap">
-                    {activity.time}
-                  </span>
                 </div>
               );
             })}
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="glass-card p-6">
-          <h2 className="text-lg font-semibold text-foreground mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {quickActions.map((action) => {
-              const Icon = action.icon;
-              return (
-                <Link
-                  key={action.title}
-                  to={action.href}
-                  className="glass-card-hover p-4 text-center group"
-                >
-                  <div className={cn(
-                    "inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3 transition-transform group-hover:scale-110",
-                    action.color === "primary" && "bg-primary/20",
-                    action.color === "secondary" && "bg-secondary/20",
-                    action.color === "accent" && "bg-accent/20",
-                    action.color === "success" && "bg-success/20",
-                  )}>
-                    <Icon className={cn(
-                      "h-6 w-6",
-                      action.color === "primary" && "text-primary",
-                      action.color === "secondary" && "text-secondary",
-                      action.color === "accent" && "text-accent",
-                      action.color === "success" && "text-success",
-                    )} />
+        {/* Quick Actions & Health */}
+        <div className="space-y-6">
+          <div className="glass-card p-6">
+            <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-2 gap-3">
+              {quickActions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <Link
+                    key={action.title}
+                    to={action.href}
+                    className="flex flex-col items-center justify-center p-4 rounded-xl bg-secondary/10 hover:bg-secondary/20 border border-transparent hover:border-secondary/30 transition-all text-center group"
+                  >
+                    <Icon className={cn("h-6 w-6 mb-2 text-secondary group-hover:scale-110 transition-transform")} />
+                    <span className="text-xs font-medium text-white">{action.title}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="glass-card p-6">
+            <h2 className="text-lg font-semibold text-white mb-4">Driver Status</h2>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-success/10 border border-success/20">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-success/20 rounded-md">
+                    <Car className="h-4 w-4 text-success" />
                   </div>
-                  <div className="text-sm font-medium text-foreground">{action.title}</div>
-                </Link>
-              );
-            })}
-          </div>
-
-          {/* System Health */}
-          <div className="mt-6 pt-6 border-t border-border">
-            <h3 className="text-sm font-medium text-foreground mb-4">System Health</h3>
-            <div className="space-y-3">
-              <div>
-                <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-muted-foreground">Engine Load</span>
-                  <span className="text-foreground font-medium">{metrics?.coreEngineLoad || 0}%</span>
+                  <span className="font-medium text-white">Available</span>
                 </div>
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div
-                    className="h-full rounded-full bg-gradient-to-r from-primary to-accent transition-all duration-1000"
-                    style={{ width: `${metrics?.coreEngineLoad || 0}%` }}
-                  />
-                </div>
+                <span className="text-xl font-bold text-success">18</span>
               </div>
-              <div>
-                <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-muted-foreground">Memory</span>
-                  <span className="text-foreground font-medium">{metrics?.memoryAllocation || "0 MB"}</span>
+              <div className="flex items-center justify-between p-3 rounded-lg bg-warning/10 border border-warning/20">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-warning/20 rounded-md">
+                    <Navigation className="h-4 w-4 text-warning" />
+                  </div>
+                  <span className="font-medium text-white">On Trip</span>
                 </div>
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full w-[62%] rounded-full bg-gradient-to-r from-secondary to-primary" />
-                </div>
-              </div>
-              <div>
-                <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-muted-foreground">Network</span>
-                  <span className="text-foreground font-medium">28%</span>
-                </div>
-                <div className="h-2 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full w-[28%] rounded-full bg-gradient-to-r from-accent to-success" />
-                </div>
+                <span className="text-xl font-bold text-warning">24</span>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Driver Overview */}
-      <div className="glass-card p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-lg font-semibold text-foreground">Driver Overview</h2>
-          <a href="/drivers" className="text-sm text-primary hover:underline">View All</a>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="p-4 rounded-xl bg-success/10 border border-success/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-success/20">
-                <Car className="h-4 w-4 text-success" />
-              </div>
-              <span className="font-medium text-foreground">Available</span>
-            </div>
-            <div className="text-2xl font-bold text-success">18</div>
-            <p className="text-sm text-muted-foreground">Ready to dispatch</p>
-          </div>
-          <div className="p-4 rounded-xl bg-warning/10 border border-warning/20">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-warning/20">
-                <Navigation className="h-4 w-4 text-warning" />
-              </div>
-              <span className="font-medium text-foreground">On Trip</span>
-            </div>
-            <div className="text-2xl font-bold text-warning">24</div>
-            <p className="text-sm text-muted-foreground">Currently assigned</p>
-          </div>
-          <div className="p-4 rounded-xl bg-muted/50 border border-border">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 rounded-lg bg-muted">
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </div>
-              <span className="font-medium text-foreground">Offline</span>
-            </div>
-            <div className="text-2xl font-bold text-muted-foreground">8</div>
-            <p className="text-sm text-muted-foreground">Not available</p>
           </div>
         </div>
       </div>

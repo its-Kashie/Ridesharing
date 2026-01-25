@@ -15,16 +15,19 @@
     --popover: 230 25% 7%;
     --popover-foreground: 0 0% 100%;
 
-    --primary: 263.4 70% 50.4%; /* Purple */
+    --primary: 263.4 70% 50.4%;
+    /* Purple */
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 190 90% 50%; /* Cyan */
+    --secondary: 190 90% 50%;
+    /* Cyan */
     --secondary-foreground: 230 40% 10%;
 
     --muted: 230 25% 12%;
     --muted-foreground: 230 10% 70%;
 
-    --accent: 280 80% 60%; /* Violet */
+    --accent: 280 80% 60%;
+    /* Violet */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -81,11 +84,11 @@
 
   body {
     @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary;
-    background-image: 
-      radial-gradient(at 0% 0%, hsla(263, 70%, 50%, 0.15) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(190, 90%, 50%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(280, 80%, 60%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(263, 70%, 50%, 0.05) 0px, transparent 50%);
+    background-image:
+      radial-gradient(at 0% 0%, hsla(263, 70%, 50%, 0.08) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(190, 90%, 50%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(280, 80%, 60%, 0.05) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(263, 70%, 50%, 0.03) 0px, transparent 50%);
     background-attachment: fixed;
   }
 }
@@ -94,10 +97,10 @@
 
   /* Glassmorphism Card */
   .glass-card {
-    @apply relative overflow-hidden rounded-xl border border-glass-border bg-glass/80 backdrop-blur-xl;
+    @apply relative overflow-hidden rounded-2xl border border-white/5 bg-card/60 backdrop-blur-md;
     box-shadow:
-      0 8px 32px 0 hsla(222, 47%, 5%, 0.4),
-      inset 0 1px 0 0 hsla(210, 40%, 98%, 0.05);
+      0 4px 24px -1px hsla(222, 47%, 5%, 0.2),
+      inset 0 1px 0 0 hsla(0, 0%, 100%, 0.03);
   }
 
   .glass-card-hover {
@@ -105,10 +108,10 @@
   }
 
   .glass-card-hover:hover {
-    @apply border-glass-highlight/50;
+    @apply border-primary/20 bg-card/80;
     box-shadow:
-      0 8px 32px 0 hsla(199, 89%, 48%, 0.15),
-      inset 0 1px 0 0 hsla(210, 40%, 98%, 0.1);
+      0 12px 32px -4px hsla(263, 70%, 50%, 0.1),
+      inset 0 1px 0 0 hsla(0, 0%, 100%, 0.05);
     transform: translateY(-2px);
   }
 

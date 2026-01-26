@@ -27,7 +27,7 @@ export default function DriverDashboard() {
             {/* Header */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-white">Driver Dashboard</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Driver Dashboard</h1>
                     <p className="text-muted-foreground">Welcome back, {user?.name}</p>
                 </div>
                 <div className="flex items-center gap-3">
@@ -48,15 +48,15 @@ export default function DriverDashboard() {
                 ].map((stat, i) => (
                     <div
                         key={i}
-                        className="glass-card p-6 border border-white/5 hover:bg-white/5 transition-colors"
+                        className="glass-card p-6 border border-border/40 hover:bg-secondary/10 transition-colors"
                     >
                         <div className="flex items-center justify-between mb-4">
                             <div className={cn("p-2 rounded-lg", stat.bg)}>
                                 <stat.icon className={cn("h-5 w-5", stat.color)} />
                             </div>
-                            <span className="text-xs font-medium text-muted-foreground bg-white/5 px-2 py-1 rounded">{stat.trend}</span>
+                            <span className="text-xs font-medium text-muted-foreground bg-secondary/10 px-2 py-1 rounded">{stat.trend}</span>
                         </div>
-                        <div className="text-2xl font-bold text-white">{stat.value}</div>
+                        <div className="text-2xl font-bold text-foreground">{stat.value}</div>
                         <div className="text-xs text-muted-foreground mt-1">{stat.title}</div>
                     </div>
                 ))}
@@ -64,9 +64,9 @@ export default function DriverDashboard() {
 
             <div className="grid lg:grid-cols-3 gap-6">
                 {/* Active Trip / Next Request */}
-                <Card className="lg:col-span-2 glass-card border-white/5 bg-card/50">
-                    <CardHeader className="border-b border-white/5 pb-4">
-                        <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+                <Card className="lg:col-span-2 glass-card border-border/40 bg-card/50">
+                    <CardHeader className="border-b border-border/40 pb-4">
+                        <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
                             <Zap className="h-5 w-5 text-primary" />
                             New Trip Request
                         </CardTitle>
@@ -79,7 +79,7 @@ export default function DriverDashboard() {
                                         <div className="mt-1.5 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/20" />
                                         <div>
                                             <div className="text-xs font-medium text-muted-foreground uppercase">Pickup</div>
-                                            <div className="text-base font-semibold text-white">Downtown Central • Hub A</div>
+                                            <div className="text-base font-semibold text-foreground">Downtown Central • Hub A</div>
                                         </div>
                                     </div>
                                     <div className="h-8 w-0.5 bg-border ml-1.5" />
@@ -87,18 +87,18 @@ export default function DriverDashboard() {
                                         <div className="mt-1.5 h-3 w-3 rounded-full bg-accent ring-4 ring-accent/20" />
                                         <div>
                                             <div className="text-xs font-medium text-muted-foreground uppercase">Dropoff</div>
-                                            <div className="text-base font-semibold text-white">Cyber-Port Terminal 4</div>
+                                            <div className="text-base font-semibold text-foreground">Cyber-Port Terminal 4</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="flex flex-col justify-center items-end border-t md:border-t-0 md:border-l border-white/5 pt-4 md:pt-0 md:pl-6">
-                                <div className="text-3xl font-bold text-white mb-1">$42.00</div>
+                            <div className="flex flex-col justify-center items-end border-t md:border-t-0 md:border-l border-border/40 pt-4 md:pt-0 md:pl-6">
+                                <div className="text-3xl font-bold text-foreground mb-1">$42.00</div>
                                 <div className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">High Demand</div>
                             </div>
                         </div>
                         <div className="flex gap-4">
-                            <Button variant="outline" className="h-12 flex-1 rounded-xl border-white/10 hover:bg-white/5 hover:text-white">
+                            <Button variant="outline" className="h-12 flex-1 rounded-xl border-border hover:bg-secondary/10 hover:text-foreground">
                                 Decline
                             </Button>
                             <Button className="h-12 flex-[2] rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold">
@@ -109,9 +109,9 @@ export default function DriverDashboard() {
                 </Card>
 
                 {/* Driver Map / Zone Info */}
-                <Card className="glass-card border-white/5 p-0 overflow-hidden">
-                    <CardHeader className="pb-4 border-b border-white/5 px-6 pt-6">
-                        <CardTitle className="text-lg font-semibold text-white flex items-center gap-2">
+                <Card className="glass-card border-border/40 p-0 overflow-hidden">
+                    <CardHeader className="pb-4 border-b border-border/40 px-6 pt-6">
+                        <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
                             <MapIcon className="h-5 w-5 text-muted-foreground" />
                             Current Zone
                         </CardTitle>

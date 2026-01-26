@@ -33,8 +33,8 @@ export default function CityGraph() {
       {/* Header */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">City Graph Visualization</h1>
-          <p className="text-muted-foreground mt-1">Interactive GTA-style city map with real-time navigation</p>
+          <h1 className="text-3xl font-bold text-foreground">Live Map</h1>
+          <p className="text-muted-foreground mt-1">Real-time navigation topology and node status.</p>
         </div>
       </div>
 

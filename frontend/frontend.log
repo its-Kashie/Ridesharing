@@ -1,0 +1,14 @@
+
+> vite_react_shadcn_ts@0.0.0 dev
+> vite
+
+Port 8081 is in use, trying another one...
+
+  VITE v5.4.19  ready in 532 ms
+
+  ➜  Local:   http://localhost:8082/
+  ➜  Network: http://192.168.1.66:8082/
+  ➜  press h + enter to show help
+Browserslist: browsers data (caniuse-lite) is 7 months old. Please run:
+  npx update-browserslist-db@latest
+  Why you should do it regularly: https://github.com/browserslist/update-db#readme

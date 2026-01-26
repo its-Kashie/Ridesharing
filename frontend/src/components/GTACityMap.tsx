@@ -32,12 +32,12 @@ import SimulationControls from "@/components/SimulationControls";
 
 // City zones with distinct colors (GTA-style districts)
 const ZONES = {
-  downtown: { name: "Downtown", color: "#3B82F6", bgColor: "rgba(59, 130, 246, 0.15)" },
-  industrial: { name: "Industrial", color: "#F59E0B", bgColor: "rgba(245, 158, 11, 0.15)" },
-  residential: { name: "Residential", color: "#10B981", bgColor: "rgba(16, 185, 129, 0.15)" },
-  commercial: { name: "Commercial", color: "#8B5CF6", bgColor: "rgba(139, 92, 246, 0.15)" },
-  waterfront: { name: "Waterfront", color: "#06B6D4", bgColor: "rgba(6, 182, 212, 0.15)" },
-  airport: { name: "Airport", color: "#EF4444", bgColor: "rgba(239, 68, 68, 0.15)" },
+  downtown: { name: "Downtown", color: "#3B82F6", bgColor: "rgba(59, 130, 246, 0.1)" },
+  industrial: { name: "Industrial", color: "#F59E0B", bgColor: "rgba(245, 158, 11, 0.1)" },
+  residential: { name: "Residential", color: "#10B981", bgColor: "rgba(16, 185, 129, 0.1)" },
+  commercial: { name: "Commercial", color: "#8B5CF6", bgColor: "rgba(139, 92, 246, 0.1)" },
+  waterfront: { name: "Waterfront", color: "#06B6D4", bgColor: "rgba(6, 182, 212, 0.1)" },
+  airport: { name: "Airport", color: "#EF4444", bgColor: "rgba(239, 68, 68, 0.1)" },
 };
 
 // Road network definition
@@ -81,27 +81,27 @@ const BUILDINGS = [
   { id: "b2", x: 500, y: 160, w: 40, h: 60, type: "office", zone: "downtown", name: "Tech Center" },
   { id: "b3", x: 550, y: 180, w: 50, h: 70, type: "skyscraper", zone: "downtown", name: "Finance Tower" },
   { id: "b4", x: 460, y: 280, w: 45, h: 55, type: "office", zone: "downtown", name: "City Hall" },
-  
+
   // Commercial
   { id: "b5", x: 700, y: 160, w: 70, h: 50, type: "mall", zone: "commercial", name: "Metro Mall" },
   { id: "b6", x: 720, y: 230, w: 50, h: 40, type: "shop", zone: "commercial", name: "Plaza" },
-  
+
   // Residential
   { id: "b7", x: 180, y: 180, w: 35, h: 45, type: "house", zone: "residential", name: "Green Hills" },
   { id: "b8", x: 230, y: 200, w: 30, h: 40, type: "house", zone: "residential" },
   { id: "b9", x: 280, y: 180, w: 35, h: 50, type: "apartment", zone: "residential" },
   { id: "b10", x: 180, y: 240, w: 40, h: 35, type: "house", zone: "residential" },
   { id: "b11", x: 240, y: 250, w: 35, h: 35, type: "house", zone: "residential" },
-  
+
   // Industrial
   { id: "b12", x: 700, y: 500, w: 80, h: 60, type: "factory", zone: "industrial", name: "Steel Works" },
   { id: "b13", x: 800, y: 520, w: 60, h: 50, type: "warehouse", zone: "industrial" },
   { id: "b14", x: 720, y: 580, w: 70, h: 45, type: "factory", zone: "industrial" },
-  
+
   // Waterfront
   { id: "b15", x: 150, y: 500, w: 60, h: 40, type: "marina", zone: "waterfront", name: "Marina Bay" },
   { id: "b16", x: 220, y: 520, w: 50, h: 50, type: "restaurant", zone: "waterfront", name: "Seaside Diner" },
-  
+
   // Airport
   { id: "b17", x: 100, y: 620, w: 150, h: 80, type: "terminal", zone: "airport", name: "Metro Airport" },
 ];
@@ -230,11 +230,11 @@ export default function GTACityMap({
   const renderRoad = (road: any) => {
     const points = road.points;
     const pathD = `M ${points[0][0]} ${points[0][1]} L ${points[1][0]} ${points[1][1]}`;
-    
+
     const strokeWidth = road.type === "highway" ? 12 : road.type === "main" ? 6 : 3;
-    const strokeColor = road.type === "highway" ? "#4B5563" : road.type === "main" ? "#374151" : "#1F2937";
+    const strokeColor = road.type === "highway" ? "#94A3B8" : road.type === "main" ? "#CBD5E1" : "#E2E8F0";
     const dashArray = road.type === "highway" ? "none" : road.type === "main" ? "none" : "none";
-    
+
     return (
       <g key={road.id}>
         {/* Road background */}
@@ -282,10 +282,10 @@ export default function GTACityMap({
   const renderBuilding = (building: any) => {
     const zoneColor = getZoneColor(building.zone);
     const isSelected = selectedItem?.id === building.id;
-    
+
     return (
-      <g 
-        key={building.id} 
+      <g
+        key={building.id}
         transform={`translate(${building.x}, ${building.y})`}
         className="cursor-pointer"
         onClick={() => {
@@ -357,9 +357,9 @@ export default function GTACityMap({
       park: TreePine,
       airport: Plane,
     }[poi.type] || MapPin;
-    
+
     const isSelected = selectedItem?.id === poi.id;
-    
+
     return (
       <g
         key={poi.id}
@@ -404,10 +404,10 @@ export default function GTACityMap({
       picking_up: "#8B5CF6",
       dropping_off: "#F59E0B",
     }[driver.status] || "#6B7280";
-    
+
     const isSelected = selectedItem?.id === driver.id;
     const hasRoute = driver.route.length >= 2;
-    
+
     return (
       <g key={driver.id}>
         {/* Route visualization */}
@@ -457,7 +457,7 @@ export default function GTACityMap({
             )}
           </g>
         )}
-        
+
         {/* Driver car */}
         <g
           transform={`translate(${driver.x}, ${driver.y})`}
@@ -531,7 +531,7 @@ export default function GTACityMap({
 
   const renderRider = (rider: any) => {
     const isSelected = selectedItem?.id === rider.id;
-    
+
     return (
       <g
         key={rider.id}
@@ -570,7 +570,7 @@ export default function GTACityMap({
   const renderNavNode = (node: any) => {
     const isInRoute = selectedRoute.includes(node.id);
     const isSelected = selectedItem?.id === node.id;
-    
+
     return (
       <g
         key={node.id}
@@ -603,7 +603,7 @@ export default function GTACityMap({
   };
 
   return (
-    <div className={cn("relative w-full h-full bg-slate-950 rounded-2xl overflow-hidden border border-glass-border shadow-2xl", className)}>
+    <div className={cn("relative w-full h-full bg-white rounded-xl overflow-hidden border border-gray-200 shadow-sm", className)}>
       {/* Map Controls */}
       <div className="absolute top-4 right-4 z-20 flex flex-col gap-2">
         <div className="flex flex-col bg-background/90 backdrop-blur-md border border-glass-border rounded-lg overflow-hidden shadow-lg">
@@ -645,7 +645,7 @@ export default function GTACityMap({
       </div>
 
       {/* Simulation Controls */}
-      <div className="absolute top-4 left-4 z-20 w-64">
+      <div className="absolute top-48 right-4 z-20 w-64">
         <SimulationControls
           isPlaying={isPlaying}
           onPlayPause={() => setIsPlaying(!isPlaying)}
@@ -693,7 +693,7 @@ export default function GTACityMap({
                 <Badge className={cn(
                   "text-[10px]",
                   selectedItem.status === "available" ? "bg-success/20 text-success" :
-                  selectedItem.status === "busy" ? "bg-warning/20 text-warning" : "bg-muted"
+                    selectedItem.status === "busy" ? "bg-warning/20 text-warning" : "bg-muted"
                 )}>
                   {selectedItem.status}
                 </Badge>
@@ -708,8 +708,8 @@ export default function GTACityMap({
             </div>
           )}
           {selectedItem.zone && (
-            <Badge 
-              className="mt-2 text-[10px]" 
+            <Badge
+              className="mt-2 text-[10px]"
               style={{ backgroundColor: getZoneBg(selectedItem.zone), color: getZoneColor(selectedItem.zone) }}
             >
               {ZONES[selectedItem.zone as keyof typeof ZONES]?.name || selectedItem.zone}
@@ -753,7 +753,7 @@ export default function GTACityMap({
           <defs>
             {/* Grid pattern */}
             <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
-              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(255,255,255,0.02)" strokeWidth="0.5" />
+              <path d="M 50 0 L 0 0 0 50" fill="none" stroke="rgba(0,0,0,0.05)" strokeWidth="0.5" />
             </pattern>
             {/* Glow filter */}
             <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
@@ -772,7 +772,7 @@ export default function GTACityMap({
 
           <g transform={`translate(${offset.x}, ${offset.y}) scale(${zoom})`}>
             {/* Background */}
-            <rect x="-500" y="-500" width="2000" height="1800" fill="#0F172A" />
+            <rect x="-500" y="-500" width="2000" height="1800" fill="#F8FAFC" />
             <rect x="-500" y="-500" width="2000" height="1800" fill="url(#grid)" />
 
             {/* Zone areas (district backgrounds) */}
@@ -791,7 +791,7 @@ export default function GTACityMap({
 
             {/* Water body */}
             <ellipse cx={100} cy={500} rx={60} ry={40} fill="url(#water)" opacity={0.6} />
-            
+
             {/* Parks/Green areas */}
             <ellipse cx={450} cy={350} rx={40} ry={30} fill="rgba(16, 185, 129, 0.3)" />
             <ellipse cx={300} cy={380} rx={25} ry={20} fill="rgba(16, 185, 129, 0.2)" />
@@ -824,7 +824,7 @@ export default function GTACityMap({
                   // Connect to nearby nodes
                   return NAV_NODES.slice(i + 1).map(otherNode => {
                     const dist = Math.sqrt(
-                      Math.pow(node.x - otherNode.x, 2) + 
+                      Math.pow(node.x - otherNode.x, 2) +
                       Math.pow(node.y - otherNode.y, 2)
                     );
                     if (dist < 250) {

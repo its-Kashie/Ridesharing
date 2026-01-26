@@ -13,7 +13,7 @@ export function MainLayout() {
 
   return (
     <TooltipProvider>
-      <div className="flex min-h-screen w-full gradient-bg gradient-mesh overflow-hidden">
+      <div className="flex min-h-screen w-full bg-gray-50 overflow-hidden">
         {!isMobile && <AppSidebar />}
 
         <main className="flex-1 overflow-auto flex flex-col">

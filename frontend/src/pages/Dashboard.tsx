@@ -79,7 +79,7 @@ const activityStyles = {
 };
 
 const quickActions = [
-  { title: "New Trip", icon: Navigation, href: "/trip-request", color: "primary" },
+  { title: "New Trip", icon: Navigation, href: "/dispatch", color: "primary" },
   { title: "View Graph", icon: Activity, href: "/graph", color: "secondary" },
   { title: "Find Path", icon: TrendingUp, href: "/shortest-path", color: "accent" },
   { title: "Analytics", icon: Clock, href: "/analytics", color: "success" },
@@ -111,7 +111,7 @@ const AdminDashboardContent = () => {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground">Dashboard</h1>
           <p className="text-muted-foreground">Welcome back, {user?.name}</p>
         </div>
         <div className="flex items-center gap-2">
@@ -157,7 +157,7 @@ const AdminDashboardContent = () => {
         {/* Recent Activity */}
         <div className="lg:col-span-2 glass-card p-6">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-lg font-semibold text-white">Recent Activity</h2>
+            <h2 className="text-lg font-semibold text-foreground">Recent Activity</h2>
           </div>
           <div className="space-y-1">
             {activities.map((activity, index) => {
@@ -166,13 +166,13 @@ const AdminDashboardContent = () => {
               return (
                 <div
                   key={activity.id}
-                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/5 transition-colors border border-transparent hover:border-white/5"
+                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-secondary/10 transition-colors border border-transparent hover:border-border/40"
                 >
                   <div className={cn("p-2.5 rounded-lg", style.bg)}>
                     <Icon className={cn("h-4 w-4", style.color)} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{activity.message}</p>
+                    <p className="text-sm font-medium text-foreground truncate">{activity.message}</p>
                     <p className="text-xs text-muted-foreground">{activity.time}</p>
                   </div>
                 </div>
@@ -184,7 +184,7 @@ const AdminDashboardContent = () => {
         {/* Quick Actions & Health */}
         <div className="space-y-6">
           <div className="glass-card p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Quick Actions</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">Quick Actions</h2>
             <div className="grid grid-cols-2 gap-3">
               {quickActions.map((action) => {
                 const Icon = action.icon;
@@ -195,7 +195,7 @@ const AdminDashboardContent = () => {
                     className="flex flex-col items-center justify-center p-4 rounded-xl bg-secondary/10 hover:bg-secondary/20 border border-transparent hover:border-secondary/30 transition-all text-center group"
                   >
                     <Icon className={cn("h-6 w-6 mb-2 text-secondary group-hover:scale-110 transition-transform")} />
-                    <span className="text-xs font-medium text-white">{action.title}</span>
+                    <span className="text-xs font-medium text-foreground">{action.title}</span>
                   </Link>
                 );
               })}
@@ -203,14 +203,14 @@ const AdminDashboardContent = () => {
           </div>
 
           <div className="glass-card p-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Driver Status</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">Driver Status</h2>
             <div className="space-y-4">
               <div className="flex items-center justify-between p-3 rounded-lg bg-success/10 border border-success/20">
                 <div className="flex items-center gap-3">
                   <div className="p-2 bg-success/20 rounded-md">
                     <Car className="h-4 w-4 text-success" />
                   </div>
-                  <span className="font-medium text-white">Available</span>
+                  <span className="font-medium text-foreground">Available</span>
                 </div>
                 <span className="text-xl font-bold text-success">18</span>
               </div>
@@ -219,7 +219,7 @@ const AdminDashboardContent = () => {
                   <div className="p-2 bg-warning/20 rounded-md">
                     <Navigation className="h-4 w-4 text-warning" />
                   </div>
-                  <span className="font-medium text-white">On Trip</span>
+                  <span className="font-medium text-foreground">On Trip</span>
                 </div>
                 <span className="text-xl font-bold text-warning">24</span>
               </div>

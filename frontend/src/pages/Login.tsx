@@ -61,7 +61,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-background">
+    <div className="min-h-screen flex items-center justify-center p-6 bg-gray-50">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -74,15 +74,15 @@ export default function Login() {
               <Zap className="h-6 w-6" />
             </div>
             <div className="text-left">
-              <span className="text-2xl font-bold tracking-tight text-white block">RideFlow</span>
+              <span className="text-2xl font-bold tracking-tight text-foreground block">RideFlow</span>
             </div>
           </Link>
         </div>
 
         {/* Form Card */}
-        <div className="glass-card p-8">
+        <div className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold text-white mb-2">
+            <h1 className="text-2xl font-bold text-foreground mb-2">
               {isLogin ? "Welcome back" : "Create an account"}
             </h1>
             <p className="text-muted-foreground text-sm">

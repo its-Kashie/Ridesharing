@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
   Map,
@@ -44,53 +44,17 @@ import { useAuth } from "@/lib/auth-context";
 
 const adminNavigation: NavGroup[] = [
   {
-    title: "Overview",
+    title: "Main",
     items: [
-      { title: "Landing", href: "/", icon: Home },
       { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { title: "Live Map", href: "/graph", icon: Map },
+      { title: "Trip Activity", href: "/active-trips", icon: Navigation },
     ],
   },
   {
-    title: "Graph & Algorithms",
+    title: "Management",
     items: [
-      { title: "City Graph", href: "/graph", icon: Map },
-      { title: "Shortest Path", href: "/shortest-path", icon: Route, badge: "DSA" },
-    ],
-  },
-  {
-    title: "Operations",
-    items: [
-      { title: "Drivers", href: "/drivers", icon: Car },
-      { title: "Dispatch Engine", href: "/dispatch", icon: Zap },
-    ],
-  },
-  {
-    title: "Trip Management",
-    items: [
-      { title: "State Machine", href: "/state-machine", icon: GitBranch, badge: "DSA" },
-      { title: "Active Trips", href: "/active-trips", icon: Navigation },
-      { title: "Rollback", href: "/rollback", icon: RotateCcw, badge: "DSA" },
-      { title: "Trip History", href: "/history", icon: History },
-    ],
-  },
-  {
-    title: "Analytics & Reports",
-    items: [
-      { title: "Analytics", href: "/analytics", icon: BarChart3 },
-      { title: "System Logs", href: "/logs", icon: ScrollText },
-    ],
-  },
-  {
-    title: "Documentation",
-    items: [
-      { title: "Algorithm Docs", href: "/docs", icon: BookOpen },
-      { title: "Test Cases", href: "/tests", icon: TestTube },
-      { title: "Team", href: "/team", icon: UsersRound },
-    ],
-  },
-  {
-    title: "System",
-    items: [
+      { title: "Statistics", href: "/analytics", icon: BarChart3 },
       { title: "Settings", href: "/settings", icon: Settings },
     ],
   },
@@ -169,7 +133,7 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
             <Zap className="h-4 w-4 text-primary-foreground" />
           </div>
         )}
-        {!sidebarCollapsed && <ModeToggle />}
+        {!sidebarCollapsed && <div className="w-8" />} {/* Spacer to balance layout without theme toggle */}
       </div>
 
       {/* Navigation */}
@@ -178,7 +142,7 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
           {navigation.map((group) => (
             <div key={group.title} className="space-y-4">
               {!sidebarCollapsed && (
-                <h3 className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-white/20">
+                <h3 className="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
                   {group.title}
                 </h3>
               )}
@@ -196,21 +160,21 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
                         "group flex items-center gap-3 rounded-xl px-3 py-2.5 text-xs font-bold transition-all duration-300 relative overflow-hidden",
                         isActive
                           ? "bg-primary/20 text-primary shadow-[inset_0_0_20px_rgba(var(--primary),0.1)]"
-                          : "text-white/40 hover:bg-white/5 hover:text-white"
+                          : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground"
                       )}
                     >
                       {isActive && <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-full" />}
                       <Icon
                         className={cn(
                           "h-5 w-5 shrink-0 transition-all duration-300",
-                          isActive ? "text-primary scale-110" : "text-white/20 group-hover:text-white group-hover:scale-110"
+                          isActive ? "text-primary scale-110" : "text-sidebar-foreground/40 group-hover:text-sidebar-foreground group-hover:scale-110"
                         )}
                       />
                       {!sidebarCollapsed && (
                         <>
                           <span className="flex-1 uppercase tracking-widest">{item.title}</span>
                           {item.badge && (
-                            <span className="rounded-lg bg-white/5 border border-white/5 px-1.5 py-0.5 text-[8px] font-black text-white/40 group-hover:text-white transition-colors">
+                            <span className="rounded-lg bg-sidebar-accent border border-sidebar-border px-1.5 py-0.5 text-[8px] font-black text-sidebar-foreground/60 group-hover:text-sidebar-foreground transition-colors">
                               {item.badge}
                             </span>
                           )}
@@ -223,7 +187,7 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
                     return (
                       <Tooltip key={item.href} delayDuration={0}>
                         <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
-                        <TooltipContent side="right" className="bg-[#0a0b14] border-white/10 text-white font-bold text-[10px] uppercase tracking-widest">
+                        <TooltipContent side="right" className="bg-popover border-border text-foreground font-bold text-[10px] uppercase tracking-widest">
                           {item.title}
                         </TooltipContent>
                       </Tooltip>
@@ -239,15 +203,15 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
       </ScrollArea>
 
       {/* User Profile / Logout */}
-      <div className="mt-auto border-t border-white/5 p-4 bg-white/5">
+      <div className="mt-auto border-t border-sidebar-border p-4 bg-sidebar-accent/50">
         <div className={cn("flex items-center gap-3", sidebarCollapsed && "justify-center")}>
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-white/10 overflow-hidden">
-            {user?.avatar ? <img src={user.avatar} className="h-full w-full object-cover" /> : <Users className="h-5 w-5 text-white/50" />}
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center border border-sidebar-border overflow-hidden">
+            {user?.avatar ? <img src={user.avatar} className="h-full w-full object-cover" /> : <Users className="h-5 w-5 text-sidebar-foreground/50" />}
           </div>
           {!sidebarCollapsed && (
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-black text-white truncate uppercase tracking-tighter italic">{user?.name || "Guest User"}</div>
-              <div className="text-[9px] font-bold text-white/30 truncate uppercase tracking-widest">{user?.role || "external"} • ACTIVE</div>
+              <div className="text-xs font-black text-sidebar-foreground truncate uppercase tracking-tighter italic">{user?.name || "Guest User"}</div>
+              <div className="text-[9px] font-bold text-sidebar-foreground/50 truncate uppercase tracking-widest">{user?.role || "external"} • ACTIVE</div>
             </div>
           )}
           {!sidebarCollapsed && (
@@ -258,7 +222,7 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
                 const { logout } = useAuth(); // or just use the logout from scope if available
                 window.location.href = "/login";
               }}
-              className="text-white/20 hover:text-destructive hover:bg-destructive/10 shrink-0"
+              className="text-sidebar-foreground/50 hover:text-destructive hover:bg-destructive/10 shrink-0"
             >
               <LogIn className="h-4 w-4 rotate-180" />
             </Button>
@@ -272,7 +236,7 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="w-full justify-center text-white/20 hover:text-white"
+            className="w-full justify-center text-sidebar-foreground/50 hover:text-sidebar-foreground"
             onClick={() => setCollapsed(!collapsed)}
           >
             {sidebarCollapsed ? (

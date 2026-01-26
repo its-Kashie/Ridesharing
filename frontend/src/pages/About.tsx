@@ -54,10 +54,10 @@ export default function About() {
                     {/* Hero Section */}
                     <div className="text-center mb-20 animate-fade-in">
                         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-                            About <span className="text-gradient-primary">RideFlow</span>
+                            About <span className="text-gradient-primary">Rido</span>
                         </h1>
                         <p className="text-xl text-muted-foreground leading-relaxed">
-                            RideFlow is a sophisticated ride-sharing dispatch system designed to demonstrate
+                            Rido is a sophisticated ride-sharing dispatch system designed to demonstrate
                             the power of Data Structures and Algorithms in solving real-world mobility challenges.
                         </p>
                     </div>
@@ -160,7 +160,7 @@ export default function About() {
                     {/* Footer */}
                     <footer className="pt-8 border-t border-border/50 text-center">
                         <p className="text-sm text-muted-foreground">
-                            Built with precision for the DSA Semester Project 2024.
+                            Built with precision for the DSA Semester Project 2026.
                         </p>
                     </footer>
                 </div>

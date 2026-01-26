@@ -6,74 +6,89 @@
 
 @layer base {
   :root {
-    --background: 230 25% 4%;
-    --foreground: 0 0% 100%;
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
 
-    --card: 230 25% 7%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
 
-    --popover: 230 25% 7%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 263.4 70% 50.4%;
-    /* Purple */
+    --primary: 262.1 83.3% 57.8%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 190 90% 50%;
-    /* Cyan */
-    --secondary-foreground: 230 40% 10%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --muted: 230 25% 12%;
-    --muted-foreground: 230 10% 70%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 280 80% 60%;
-    /* Violet */
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 230 25% 15%;
-    --input: 230 25% 15%;
-    --ring: 263.4 70% 50.4%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262.1 83.3% 57.8%;
 
-    --radius: 1rem;
+    --radius: 0.5rem;
 
-    /* Glassmorphism specific */
-    --glass: 230 25% 8%;
-    --glass-border: 230 25% 20%;
-    --glass-highlight: 263.4 70% 50.4%;
+    /* Glassmorphism specific - Light */
+    --glass: 0 0% 100%;
+    --glass-border: 214.3 31.8% 91.4%;
+    --glass-highlight: 262.1 83.3% 57.8%;
 
     /* Status colors */
-    --success: 142 71% 45%;
-    --success-foreground: 210 40% 98%;
+    --success: 142 76% 36%;
+    --success-foreground: 355.7 100% 97.3%;
     --warning: 48 96% 53%;
     --warning-foreground: 230 40% 10%;
     --info: 190 90% 50%;
     --info-foreground: 230 40% 10%;
 
-    /* Graph colors */
-    --node-default: 230 25% 20%;
-    --node-visited: 263.4 70% 50.4%;
+    /* Graph colors - Light */
+    --node-default: 210 40% 96.1%;
+    --node-visited: 262.1 83.3% 57.8%;
     --node-current: 190 90% 50%;
-    --node-path: 142 71% 45%;
-    --edge-default: 230 25% 15%;
-    --edge-path: 142 71% 45%;
+    --node-path: 142 76% 36%;
+    --edge-default: 214.3 31.8% 91.4%;
+    --edge-path: 142 76% 36%;
 
-    /* Sidebar */
-    --sidebar-background: 230 25% 5%;
-    --sidebar-foreground: 230 10% 80%;
-    --sidebar-primary: 263.4 70% 50.4%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 230 25% 10%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 230 25% 12%;
-    --sidebar-ring: 263.4 70% 50.4%;
+    /* Sidebar - Light */
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
-  /* Force dark mode by default as it's more premium for this project */
   .dark {
-    /* Variables already set to dark-friendly values above */
+    /* Identical to root to enforce light mode even if class is present */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 262.1 83.3% 57.8%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 262.1 83.3% 57.8%;
   }
 }
 
@@ -83,103 +98,55 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased selection:bg-primary/30 selection:text-primary;
-    background-image:
-      radial-gradient(at 0% 0%, hsla(263, 70%, 50%, 0.08) 0px, transparent 50%),
-      radial-gradient(at 100% 0%, hsla(190, 90%, 50%, 0.05) 0px, transparent 50%),
-      radial-gradient(at 100% 100%, hsla(280, 80%, 60%, 0.05) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(263, 70%, 50%, 0.03) 0px, transparent 50%);
-    background-attachment: fixed;
+    @apply bg-gray-50 text-foreground antialiased;
   }
 }
 
 @layer components {
 
-  /* Glassmorphism Card */
+  /* Clean Minimalist Card (Replaces Glass) */
   .glass-card {
-    @apply relative overflow-hidden rounded-2xl border border-white/5 bg-card/60 backdrop-blur-md;
-    box-shadow:
-      0 4px 24px -1px hsla(222, 47%, 5%, 0.2),
-      inset 0 1px 0 0 hsla(0, 0%, 100%, 0.03);
+    @apply relative overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm;
   }
 
   .glass-card-hover {
-    @apply glass-card transition-all duration-300;
+    @apply glass-card transition-shadow duration-200;
   }
 
   .glass-card-hover:hover {
-    @apply border-primary/20 bg-card/80;
-    box-shadow:
-      0 12px 32px -4px hsla(263, 70%, 50%, 0.1),
-      inset 0 1px 0 0 hsla(0, 0%, 100%, 0.05);
-    transform: translateY(-2px);
+    @apply shadow-md border-primary/20;
   }
 
-  /* Glowing effects */
-  .glow-primary {
-    box-shadow: 0 0 20px hsla(199, 89%, 48%, 0.3);
-  }
-
-  .glow-secondary {
-    box-shadow: 0 0 20px hsla(262, 83%, 58%, 0.3);
-  }
-
-  .glow-accent {
-    box-shadow: 0 0 20px hsla(172, 66%, 50%, 0.3);
-  }
-
-  .glow-success {
-    box-shadow: 0 0 20px hsla(142, 71%, 45%, 0.3);
-  }
-
-  /* Status badges */
+  /* Status badges - Simplified */
   .status-badge {
-    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold;
   }
 
   .status-available {
-    @apply bg-success/20 text-success;
+    @apply bg-green-100 text-green-700;
   }
 
   .status-assigned {
-    @apply bg-warning/20 text-warning;
+    @apply bg-yellow-100 text-yellow-700;
   }
 
   .status-offline {
-    @apply bg-muted text-muted-foreground;
+    @apply bg-gray-100 text-gray-600;
   }
 
   .status-active {
-    @apply bg-primary/20 text-primary;
+    @apply bg-primary/10 text-primary;
   }
 
-  /* Animated gradient background */
-  .gradient-bg {
-    background: linear-gradient(135deg,
-        hsl(var(--background)) 0%,
-        hsl(var(--muted)) 50%,
-        hsl(var(--background)) 100%);
-  }
-
-  .gradient-mesh {
-    background-image:
-      radial-gradient(at 40% 20%, hsla(var(--primary), 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(var(--secondary), 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(var(--accent), 0.05) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsla(var(--primary), 0.05) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(var(--secondary), 0.1) 0px, transparent 50%);
-  }
-
-  /* Text gradients */
+  /* Text gradients removed for clarity */
   .text-gradient-primary {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(199, 89%, 48%), hsl(172, 66%, 50%));
+    @apply text-primary;
   }
 
   .text-gradient-secondary {
-    @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, hsl(262, 83%, 58%), hsl(199, 89%, 48%));
+    @apply text-secondary-foreground;
   }
+
 
   /* Animated pulse for live indicators */
   .pulse-live {

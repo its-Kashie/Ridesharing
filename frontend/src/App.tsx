@@ -32,7 +32,7 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="dark" storageKey="rideflow-theme">
+    <ThemeProvider defaultTheme="light" storageKey="rideflow-theme">
       <AuthProvider>
         <TooltipProvider>
           <Toaster />

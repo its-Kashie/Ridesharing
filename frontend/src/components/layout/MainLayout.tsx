@@ -23,7 +23,7 @@ export function MainLayout() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
                   <Zap className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <span className="font-semibold text-sidebar-foreground">RideFlow</span>
+                <span className="font-semibold text-sidebar-foreground">Rido</span>
               </div>
               <Sheet open={open} onOpenChange={setOpen}>
                 <SheetTrigger asChild>

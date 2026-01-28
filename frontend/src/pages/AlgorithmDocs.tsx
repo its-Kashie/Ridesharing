@@ -15,7 +15,7 @@ const AlgorithmDocs = () => {
         <div className="max-w-5xl mx-auto space-y-6 animate-fade-in">
             <div>
                 <h1 className="text-3xl font-bold tracking-tight">Algorithm Documentation</h1>
-                <p className="text-muted-foreground">Technical deep-dive into the DSA concepts powering RideFlow.</p>
+                <p className="text-muted-foreground">Technical deep-dive into the DSA concepts powering Rido.</p>
             </div>
 
             <Tabs defaultValue="dijkstra" className="space-y-6">
@@ -40,7 +40,7 @@ const AlgorithmDocs = () => {
                             </CardHeader>
                             <CardContent className="space-y-4">
                                 <p className="text-sm leading-relaxed text-muted-foreground">
-                                    Dijkstra's algorithm is used to find the shortest paths between nodes in a graph, which may represent, for example, road networks. In RideFlow, we use it to calculate the minimum "cost" (time/distance) from a driver to a rider.
+                                    Dijkstra's algorithm is used to find the shortest paths between nodes in a graph, which may represent, for example, road networks. In Rido, we use it to calculate the minimum "cost" (time/distance) from a driver to a rider.
                                 </p>
                                 <div className="bg-black/30 rounded-lg p-4 font-mono text-xs overflow-x-auto">
                                     <pre className="text-primary-foreground/80">

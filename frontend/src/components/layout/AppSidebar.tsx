@@ -80,16 +80,9 @@ const driverNavigation: NavGroup[] = [
 
 const userNavigation: NavGroup[] = [
   {
-    title: "User Portal",
+    title: "Passenger",
     items: [
       { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { title: "Book Ride", href: "/dispatch", icon: Zap },
-    ],
-  },
-  {
-    title: "My Activity",
-    items: [
-      { title: "Trip History", href: "/history", icon: History },
       { title: "Settings", href: "/settings", icon: Settings },
     ],
   },
@@ -103,13 +96,19 @@ interface AppSidebarProps {
 }
 
 export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
-  const { role, user } = useAuth();
+  const { role, user, logout } = useAuth();
+  const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const location = useLocation();
 
   const navigation = role === "admin" ? adminNavigation : role === "driver" ? driverNavigation : userNavigation;
 
   const sidebarCollapsed = isMobile ? false : collapsed;
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <aside
@@ -125,7 +124,7 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
               <Zap className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-semibold text-sidebar-foreground">RideFlow</span>
+            <span className="font-semibold text-sidebar-foreground italic tracking-tighter">Rido</span>
           </div>
         )}
         {sidebarCollapsed && (
@@ -218,10 +217,7 @@ export function AppSidebar({ onNavigate, isMobile }: AppSidebarProps) {
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => {
-                const { logout } = useAuth(); // or just use the logout from scope if available
-                window.location.href = "/login";
-              }}
+              onClick={handleLogout}
               className="text-sidebar-foreground/50 hover:text-destructive hover:bg-destructive/10 shrink-0"
             >
               <LogIn className="h-4 w-4 rotate-180" />

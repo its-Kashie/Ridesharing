@@ -74,7 +74,7 @@ export default function Login() {
               <Zap className="h-6 w-6" />
             </div>
             <div className="text-left">
-              <span className="text-2xl font-bold tracking-tight text-foreground block">RideFlow</span>
+              <span className="text-2xl font-bold tracking-tight text-foreground block">Rido</span>
             </div>
           </Link>
         </div>
@@ -86,7 +86,7 @@ export default function Login() {
               {isLogin ? "Welcome back" : "Create an account"}
             </h1>
             <p className="text-muted-foreground text-sm">
-              {isLogin ? "Enter your details to access your account" : "Get started with RideFlow today"}
+              {isLogin ? "Enter your details to access your account" : "Get started with Rido today"}
             </p>
           </div>
 

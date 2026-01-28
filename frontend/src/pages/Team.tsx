@@ -53,7 +53,7 @@ const Team = () => {
             <div className="text-center max-w-2xl mx-auto space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight">Team & Contributions</h1>
                 <p className="text-muted-foreground">
-                    The brilliant minds behind the RideFlow Dispatch System. Each member contributed unique expertise in DSA and modern web development.
+                    The brilliant minds behind the Rido Dispatch System. Each member contributed unique expertise in DSA and modern web development.
                 </p>
             </div>
 

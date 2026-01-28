@@ -32,7 +32,7 @@ const API_BASE_URL = "http://localhost:8080/api/auth";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(() => {
-        const saved = localStorage.getItem("rideflow-user");
+        const saved = localStorage.getItem("rido-user");
         return saved ? JSON.parse(saved) : null;
     });
     const [isLoading, setIsLoading] = useState(false);
@@ -51,7 +51,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (response.ok) {
                 const data = await response.json();
                 setUser(data);
-                localStorage.setItem("rideflow-user", JSON.stringify(data));
+                localStorage.setItem("rido-user", JSON.stringify(data));
                 setIsLoading(false);
                 return true;
             }
@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (response.ok) {
                 const data = await response.json();
                 setUser(data);
-                localStorage.setItem("rideflow-user", JSON.stringify(data));
+                localStorage.setItem("rido-user", JSON.stringify(data));
                 setIsLoading(false);
                 return true;
             }
@@ -87,7 +87,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem("rideflow-user");
+        localStorage.removeItem("rido-user");
     };
 
     return (

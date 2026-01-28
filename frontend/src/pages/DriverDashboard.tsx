@@ -10,133 +10,261 @@ import {
     Zap,
     ArrowRight,
     TrendingUp,
-    Shield
+    Shield,
+    Signal,
+    Wallet,
+    MessageSquare,
+    ChevronRight,
+    Play,
+    User,
+    Navigation2
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { socket } from "@/services/socket";
+import { toast } from "sonner";
+
+interface TripRequest {
+    passengerId: string;
+    passengerName: string;
+    pickup: string;
+    destination: string;
+    timestamp: number;
+}
 
 export default function DriverDashboard() {
     const { user } = useAuth();
+    const [isOnline, setIsOnline] = useState(true);
+    const [incomingRequest, setIncomingRequest] = useState<TripRequest | null>(null);
+    const [activeTrip, setActiveTrip] = useState<TripRequest | null>(null);
+
+    useEffect(() => {
+        // Listen for new trip broadcasts in real-time
+        socket.on("trip_broadcast", (data: TripRequest) => {
+            if (isOnline && !activeTrip) {
+                setIncomingRequest(data);
+                toast.info(`NEW_DISPATCH_REQ: ${data.passengerName}`, {
+                    description: `Pickup from ${data.pickup}`,
+                    icon: <Zap className="h-5 w-5 text-primary" />
+                });
+            }
+        });
+
+        // Listen for when a trip is confirmed by the passenger
+        socket.on("trip_confirmed", (data: any) => {
+            // If we were the one accepted (in a real system we'd check driverId)
+            // for now we clear the request if it's taken
+            if (incomingRequest && incomingRequest.passengerId === data.passengerId) {
+                if (data.driverName !== user?.name && !activeTrip) {
+                    setIncomingRequest(null);
+                    toast.info(`NETWORK: Trip #${data.tripId} taken by another fleet unit.`);
+                }
+            }
+        });
+
+        socket.on("trip_finished", (data: any) => {
+            if (activeTrip && activeTrip.passengerId === data.passengerId) {
+                setActiveTrip(null);
+                toast.success("MISSION_COMPLETE", {
+                    description: "Passenger delivered. Awaiting next dispatch signal.",
+                    icon: <CheckCircle2 className="h-4 w-4" />
+                });
+            }
+        });
+
+        return () => {
+            socket.off("trip_broadcast");
+            socket.off("trip_confirmed");
+            socket.off("trip_finished");
+        };
+    }, [isOnline, activeTrip, incomingRequest, user?.name]);
+
+    const handleAccept = () => {
+        if (!incomingRequest) return;
+
+        const tripData = {
+            ...incomingRequest,
+            driverId: user?.id,
+            driverName: user?.name,
+            carModel: "Tesla Model 3",
+            carPlate: "RIDO-777",
+            tripId: `TRP-${Math.floor(Math.random() * 9000) + 1000}`,
+            price: 12.50
+        };
+
+        // Notify the passenger back via socket
+        socket.emit("accept_trip", tripData);
+
+        setActiveTrip(incomingRequest);
+        setIncomingRequest(null);
+        toast.success("MISSION_ACCEPTED: Navigation sequence updated.");
+    };
+
+    const toggleStatus = () => {
+        setIsOnline(!isOnline);
+        if (isOnline) setIncomingRequest(null);
+        toast.info(isOnline ? "OPERATOR_OFFLINE" : "OPERATOR_ONLINE");
+    };
+
+    const stats = [
+        { title: "Net Revenue", value: "$4,240.20", icon: DollarSign, color: "text-emerald-400", bg: "bg-emerald-400/10", trend: "+12.4%" },
+        { title: "Acceptance", value: "98.2%", icon: CheckCircle2, color: "text-blue-400", bg: "bg-blue-400/10", trend: "+2.1%" },
+        { title: "Rating", value: "4.98", icon: Star, color: "text-amber-400", bg: "bg-amber-400/10", trend: "0.05" },
+        { title: "Grid Time", value: "142h", icon: Clock, color: "text-purple-400", bg: "bg-purple-400/10", trend: "+8h" },
+    ];
 
     return (
-        <div className="p-4 md:p-6 space-y-6 animate-fade-in max-w-7xl mx-auto">
+        <div className="h-screen bg-white text-slate-900 p-6 lg:p-10 flex flex-col space-y-8 animate-fade-in max-w-screen-2xl mx-auto overflow-hidden">
             {/* Header */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div>
-                    <h1 className="text-3xl font-bold tracking-tight text-foreground">Driver Dashboard</h1>
-                    <p className="text-muted-foreground">Welcome back, {user?.name}</p>
-                </div>
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-success/10 border border-success/20">
-                        <div className="h-2 w-2 rounded-full bg-success animate-pulse" />
-                        <span className="text-sm font-medium text-success">Online</span>
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-8 border-b border-gray-100 pb-8 shrink-0">
+                <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} className="flex items-center gap-6">
+                    <div className="relative">
+                        <div className="h-20 w-20 rounded-3xl bg-gray-50 border border-gray-200 flex items-center justify-center text-primary font-black text-3xl italic shadow-sm">{user?.name.charAt(0)}</div>
+                        <div className={cn("absolute -bottom-1 -right-1 h-6 w-6 rounded-full border-4 border-white shadow-sm", isOnline ? "bg-emerald-500 animate-pulse" : "bg-rose-500")} />
                     </div>
+                    <div>
+                        <h1 className="text-4xl md:text-5xl font-black italic tracking-tighter text-slate-900 uppercase">{user?.name.split(' ')[0]} <span className="text-primary">DRIVE</span></h1>
+                        <p className="text-slate-400 font-black uppercase tracking-[0.3em] text-[10px] items-center gap-2 flex mt-1"><Shield className="h-3 w-3 text-primary" /> Verified Operator • Rido Fleet v2.1</p>
+                    </div>
+                </motion.div>
+
+                <div className="flex items-center gap-4">
+                    <Button onClick={toggleStatus} className={cn("h-14 px-10 rounded-2xl font-black uppercase tracking-[0.2em] text-[10px] shadow-sm transition-all", isOnline ? "bg-rose-50 text-rose-600 border border-rose-100 hover:bg-rose-600 hover:text-white" : "bg-emerald-500 text-white")}>{isOnline ? "GO_OFFLINE" : "GO_ONLINE"}</Button>
+                    <div className="h-14 w-14 rounded-2xl bg-gray-50 border border-gray-200 flex items-center justify-center text-primary"><Zap className="h-6 w-6" /></div>
                 </div>
             </div>
 
-            {/* Stats Overview */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                {[
-                    { title: "Net Earnings", value: "$4,240.20", icon: DollarSign, color: "text-success", bg: "bg-success/10", trend: "+12.4%" },
-                    { title: "Acceptance Rate", value: "98.2%", icon: CheckCircle2, color: "text-primary", bg: "bg-primary/10", trend: "+2.1%" },
-                    { title: "Rating", value: "4.98", icon: Star, color: "text-accent", bg: "bg-accent/10", trend: "5.0" },
-                    { title: "Online Hours", value: "142h", icon: Clock, color: "text-secondary", bg: "bg-secondary/10", trend: "+8h" },
-                ].map((stat, i) => (
-                    <div
-                        key={i}
-                        className="glass-card p-6 border border-border/40 hover:bg-secondary/10 transition-colors"
-                    >
-                        <div className="flex items-center justify-between mb-4">
-                            <div className={cn("p-2 rounded-lg", stat.bg)}>
-                                <stat.icon className={cn("h-5 w-5", stat.color)} />
+            {/* Scrollable Area */}
+            <div className="flex-1 overflow-y-auto custom-scrollbar space-y-8 pr-2">
+                {/* Matrix */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    {stats.map((stat, i) => (
+                        <Card key={i} className="border-gray-100 bg-white hover:bg-gray-50 transition-all relative overflow-hidden group shadow-sm rounded-3xl p-8">
+                            <div className="flex items-center justify-between mb-6">
+                                <div className={cn("p-3 rounded-2xl", stat.bg.replace('10', '20'))}><stat.icon className={cn("h-5 w-5", stat.color.replace('400', '600'))} /></div>
+                                <Badge variant="outline" className="font-black text-[9px] border-gray-100 text-slate-400">{stat.trend}</Badge>
                             </div>
-                            <span className="text-xs font-medium text-muted-foreground bg-secondary/10 px-2 py-1 rounded">{stat.trend}</span>
-                        </div>
-                        <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                        <div className="text-xs text-muted-foreground mt-1">{stat.title}</div>
-                    </div>
-                ))}
-            </div>
+                            <div className="text-3xl font-black italic text-slate-900 tracking-tighter mb-2">{stat.value}</div>
+                            <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">{stat.title}</div>
+                        </Card>
+                    ))}
+                </div>
 
-            <div className="grid lg:grid-cols-3 gap-6">
-                {/* Active Trip / Next Request */}
-                <Card className="lg:col-span-2 glass-card border-border/40 bg-card/50">
-                    <CardHeader className="border-b border-border/40 pb-4">
-                        <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
-                            <Zap className="h-5 w-5 text-primary" />
-                            New Trip Request
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6 space-y-6">
-                        <div className="flex flex-col md:flex-row gap-6">
-                            <div className="flex-1 space-y-6">
+                <div className="grid lg:grid-cols-12 gap-10">
+                    <div className="lg:col-span-8 space-y-8">
+                        <AnimatePresence mode="wait">
+                            {activeTrip ? (
+                                <motion.div key="active" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, y: -20 }}>
+                                    <Card className="border-emerald-100 bg-emerald-50/30 p-8 flex flex-col gap-10 overflow-hidden relative rounded-[2.5rem] shadow-sm">
+                                        <div className="absolute top-0 right-0 p-6"><Badge className="bg-emerald-500 text-white font-black text-[9px] uppercase px-4 py-1.5 animate-pulse shadow-md shadow-emerald-200">MISSION_IN_PROGRESS</Badge></div>
+                                        <div className="flex items-center gap-6">
+                                            <div className="h-16 w-16 rounded-2xl bg-emerald-100 flex items-center justify-center text-emerald-600 font-black text-2xl italic">{activeTrip.passengerName.charAt(0)}</div>
+                                            <div>
+                                                <h3 className="text-3xl font-black italic text-slate-900 uppercase">{activeTrip.passengerName}</h3>
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Tracking passenger signal...</p>
+                                            </div>
+                                        </div>
+                                        <div className="grid md:grid-cols-2 gap-10 border-y border-emerald-100/50 py-10">
+                                            <div className="space-y-6 relative">
+                                                <div className="absolute left-1 top-2 bottom-2 w-[1px] bg-gray-200 border-dashed border-l" />
+                                                <div className="flex items-center gap-4 pl-6 relative">
+                                                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 absolute left-0" />
+                                                    <span className="text-sm font-black italic text-slate-700 uppercase">{activeTrip.pickup}</span>
+                                                </div>
+                                                <div className="flex items-center gap-4 pl-6 relative">
+                                                    <div className="h-2.5 w-2.5 rounded-full bg-rose-500 absolute left-0" />
+                                                    <span className="text-sm font-black italic text-slate-700 uppercase">{activeTrip.destination}</span>
+                                                </div>
+                                            </div>
+                                            <div className="text-right">
+                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Target_Yield</p>
+                                                <p className="text-4xl font-black italic text-emerald-600 tracking-tighter">$12.50</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <Button className="flex-1 h-16 rounded-2xl bg-emerald-500 text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-emerald-200">COMPLETE_MISSION</Button>
+                                            <Button variant="ghost" onClick={() => setActiveTrip(null)} className="h-16 px-8 rounded-2xl border border-gray-100 text-rose-500 font-black uppercase text-xs hover:bg-rose-50">ABORT</Button>
+                                        </div>
+                                    </Card>
+                                </motion.div>
+                            ) : incomingRequest ? (
+                                <motion.div key="request" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.1 }}>
+                                    <Card className="border-primary/10 bg-white p-8 flex flex-col gap-10 overflow-hidden relative shadow-lg rounded-[2.5rem]">
+                                        <div className="absolute top-0 right-0 p-6"><Badge className="bg-primary text-white font-black text-[9px] uppercase px-4 py-1.5 animate-pulse shadow-md">INCOMING_SIGNAL</Badge></div>
+                                        <div className="flex items-center gap-6">
+                                            <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-black text-2xl italic">{incomingRequest.passengerName.charAt(0)}</div>
+                                            <div>
+                                                <h3 className="text-3xl font-black italic text-slate-900 uppercase">{incomingRequest.passengerName}</h3>
+                                                <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.4em]">Passenger requesting dispatch</p>
+                                            </div>
+                                        </div>
+                                        <div className="grid md:grid-cols-2 gap-10 border-y border-gray-100 py-10">
+                                            <div className="space-y-6 relative">
+                                                <div className="absolute left-1 top-2 bottom-2 w-[1px] bg-gray-100 border-dashed border-l" />
+                                                <div className="flex items-center gap-4 pl-6 relative">
+                                                    <div className="h-2.5 w-2.5 rounded-full bg-emerald-500 absolute left-0 shadow-sm" />
+                                                    <span className="text-sm font-black italic text-slate-700 uppercase">{incomingRequest.pickup}</span>
+                                                </div>
+                                                <div className="flex items-center gap-4 pl-6 relative">
+                                                    <div className="h-2.5 w-2.5 rounded-full bg-rose-500 absolute left-0 shadow-sm" />
+                                                    <span className="text-sm font-black italic text-slate-700 uppercase">{incomingRequest.destination}</span>
+                                                </div>
+                                            </div>
+                                            <div className="text-right flex flex-col justify-center">
+                                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Estimated_Yield</p>
+                                                <p className="text-5xl font-black italic text-slate-900 tracking-tighter leading-none">$12.50</p>
+                                            </div>
+                                        </div>
+                                        <div className="flex gap-4">
+                                            <Button variant="outline" onClick={() => setIncomingRequest(null)} className="flex-1 h-16 rounded-2xl border-gray-100 bg-gray-50 text-slate-400 font-black uppercase text-[10px] tracking-widest hover:bg-rose-50 hover:text-rose-500">DECLINE</Button>
+                                            <Button onClick={handleAccept} className="flex-[2] h-16 rounded-2xl bg-primary text-white font-black uppercase text-[10px] tracking-widest shadow-lg hover:scale-[1.02]">INITIALIZE_TRIP</Button>
+                                        </div>
+                                    </Card>
+                                </motion.div>
+                            ) : (
+                                <motion.div key="idle" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="h-80 flex flex-col items-center justify-center border-2 border-dashed border-gray-100 rounded-[3rem] bg-gray-50/50">
+                                    <Signal className="h-12 w-12 text-gray-200 mb-6 animate-pulse" />
+                                    <p className="text-[10px] font-black uppercase tracking-[0.5em] text-slate-300 italic text-center px-8 leading-relaxed">Scanning Frequency for Dispatch signals...</p>
+                                </motion.div>
+                            )}
+                        </AnimatePresence>
+                    </div>
+
+                    <div className="lg:col-span-4 space-y-10">
+                        <Card className="border-gray-100 bg-white p-0 overflow-hidden relative shadow-sm rounded-3xl">
+                            <CardHeader className="p-8 border-b border-gray-50"><CardTitle className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 italic flex items-center gap-3"><MapIcon className="h-4 w-4" />Grid_Positioning</CardTitle></CardHeader>
+                            <div className="h-64 bg-gray-50/50 flex items-center justify-center relative group">
+                                <TrendingUp className="h-24 w-24 text-gray-100 group-hover:scale-110 transition-transform" />
+                                <div className="absolute flex flex-col items-center"><div className="h-4 w-4 rounded-full bg-primary animate-ping" /><span className="text-[9px] font-black text-slate-400 uppercase tracking-widest mt-4">Node 7 Active</span></div>
+                            </div>
+                            <div className="p-8 space-y-6">
                                 <div className="space-y-4">
-                                    <div className="flex items-start gap-4">
-                                        <div className="mt-1.5 h-3 w-3 rounded-full bg-primary ring-4 ring-primary/20" />
-                                        <div>
-                                            <div className="text-xs font-medium text-muted-foreground uppercase">Pickup</div>
-                                            <div className="text-base font-semibold text-foreground">Downtown Central • Hub A</div>
-                                        </div>
-                                    </div>
-                                    <div className="h-8 w-0.5 bg-border ml-1.5" />
-                                    <div className="flex items-start gap-4">
-                                        <div className="mt-1.5 h-3 w-3 rounded-full bg-accent ring-4 ring-accent/20" />
-                                        <div>
-                                            <div className="text-xs font-medium text-muted-foreground uppercase">Dropoff</div>
-                                            <div className="text-base font-semibold text-foreground">Cyber-Port Terminal 4</div>
-                                        </div>
-                                    </div>
+                                    <div className="flex justify-between text-[10px] font-black uppercase text-slate-400 tracking-widest"><span>Cluster_Density</span><span className="text-emerald-500">Stable</span></div>
+                                    <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden shrink-0"><motion.div initial={{ width: 0 }} animate={{ width: "75%" }} className="h-full bg-emerald-500 shadow-sm" /></div>
+                                </div>
+                                <div className="flex gap-4">
+                                    <Button variant="ghost" className="flex-1 h-12 bg-gray-50 border border-gray-100 text-slate-500 font-black uppercase text-[9px] tracking-widest hover:text-primary">Heatmap</Button>
+                                    <Button variant="ghost" className="h-12 w-12 bg-gray-50 border border-gray-100 text-primary hover:bg-gray-100"><Navigation className="h-5 w-5" /></Button>
                                 </div>
                             </div>
-                            <div className="flex flex-col justify-center items-end border-t md:border-t-0 md:border-l border-border/40 pt-4 md:pt-0 md:pl-6">
-                                <div className="text-3xl font-bold text-foreground mb-1">$42.00</div>
-                                <div className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded">High Demand</div>
-                            </div>
-                        </div>
-                        <div className="flex gap-4">
-                            <Button variant="outline" className="h-12 flex-1 rounded-xl border-border hover:bg-secondary/10 hover:text-foreground">
-                                Decline
-                            </Button>
-                            <Button className="h-12 flex-[2] rounded-xl bg-primary hover:bg-primary/90 text-white font-semibold">
-                                Accept Ride
-                            </Button>
-                        </div>
-                    </CardContent>
-                </Card>
+                        </Card>
 
-                {/* Driver Map / Zone Info */}
-                <Card className="glass-card border-border/40 p-0 overflow-hidden">
-                    <CardHeader className="pb-4 border-b border-border/40 px-6 pt-6">
-                        <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
-                            <MapIcon className="h-5 w-5 text-muted-foreground" />
-                            Current Zone
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                        <div className="h-48 bg-muted relative flex items-center justify-center">
-                            <TrendingUp className="h-16 w-16 text-muted-foreground/20" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                                <span className="text-sm font-medium text-muted-foreground">Map Visualization</span>
+                        <Card className="border-amber-100 bg-amber-50/50 p-8 shadow-sm relative group overflow-hidden rounded-3xl">
+                            <div className="absolute top-0 left-0 w-full h-[1px] bg-amber-200" />
+                            <div className="flex justify-between items-start mb-6">
+                                <div><p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1 italic">Weekly Performance</p><p className="text-2xl font-black italic text-slate-900">$4,240 / $5,000</p></div>
+                                <div className="h-12 w-12 rounded-2xl bg-amber-100 flex items-center justify-center text-amber-600 shadow-sm"><TrendingUp className="h-5 w-5" /></div>
                             </div>
-                        </div>
-                        <div className="p-6 space-y-4">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-muted-foreground">Activity Level</span>
-                                <span className="text-sm font-bold text-success">High Demand</span>
-                            </div>
-                            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
-                                <div className="h-full w-[85%] bg-success" />
-                            </div>
-                            <div className="text-xs text-muted-foreground text-center pt-2">
-                                You are in a calibrated high-demand zone.
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
+                            <div className="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden"><motion.div initial={{ width: 0 }} animate={{ width: "85%" }} className="h-full bg-amber-500" /></div>
+                            <p className="text-[9px] font-black text-amber-600/40 uppercase tracking-[0.3em] mt-6 text-center italic">Advanced Tier 3 Bonus at $5,000</p>
+                        </Card>
+                    </div>
+                </div>
             </div>
         </div>
     );

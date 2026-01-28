@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Plus,
   Minus,
@@ -29,6 +29,8 @@ import { cn } from "@/lib/utils";
 import { useDriverSimulation, SimulatedDriver } from "@/hooks/useDriverSimulation";
 import { getNodeById } from "@/lib/pathfinding";
 import SimulationControls from "@/components/SimulationControls";
+import { socket } from "@/services/socket";
+import { toast } from "sonner";
 
 // City zones with distinct colors (GTA-style districts)
 const ZONES = {
@@ -77,7 +79,7 @@ const ROADS = {
 // Buildings and landmarks
 const BUILDINGS = [
   // Downtown
-  { id: "b1", x: 420, y: 180, w: 60, h: 80, type: "skyscraper", zone: "downtown", name: "RideFlow HQ" },
+  { id: "b1", x: 420, y: 180, w: 60, h: 80, type: "skyscraper", zone: "downtown", name: "Rido HQ" },
   { id: "b2", x: 500, y: 160, w: 40, h: 60, type: "office", zone: "downtown", name: "Tech Center" },
   { id: "b3", x: 550, y: 180, w: 50, h: 70, type: "skyscraper", zone: "downtown", name: "Finance Tower" },
   { id: "b4", x: 460, y: 280, w: 45, h: 55, type: "office", zone: "downtown", name: "City Hall" },
@@ -189,12 +191,36 @@ export default function GTACityMap({
     showRoutes,
     setShowRoutes,
     assignRandomTrips,
+    assignTrip,
+    addRider,
     reset,
     getDriverRoutePath,
   } = useDriverSimulation({
     initialDrivers: INITIAL_DRIVERS,
     initialRiders: INITIAL_RIDERS,
   });
+
+  // Sync simulation with real-world socket events
+  useEffect(() => {
+    socket.on("trip_broadcast", (data: any) => {
+      addRider(data);
+    });
+
+    socket.on("trip_confirmed", (data: any) => {
+      // Search for an available driver nearest to the pickup if one isn't specifically assigned
+      // For demo, we just assign the first available driver for visualization
+      const availableDriver = drivers.find(d => d.status === "available");
+      if (availableDriver) {
+        assignTrip(availableDriver.id, data.passengerId);
+        toast.success(`GRID_ACTION: Driver ${data.driverName} locked onto target.`);
+      }
+    });
+
+    return () => {
+      socket.off("trip_broadcast");
+      socket.off("trip_confirmed");
+    };
+  }, [addRider, assignTrip, drivers]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.target === mapRef.current || (e.target as HTMLElement).tagName === 'svg') {

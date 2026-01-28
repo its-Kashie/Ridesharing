@@ -9,6 +9,8 @@ import {
   generateRandomRoute,
   PATHFINDING_NODES,
 } from "@/lib/pathfinding";
+import { toast } from "sonner";
+import { socket } from "@/services/socket";
 
 export type DriverStatus = "available" | "busy" | "offline" | "en_route" | "picking_up" | "dropping_off";
 
@@ -17,18 +19,18 @@ export interface SimulatedDriver {
   name: string;
   status: DriverStatus;
   vehicle: string;
-  
+
   // Position
   x: number;
   y: number;
   heading: number;
-  
+
   // Route
   route: string[];
   routeIndex: number;
   segmentProgress: number;
   speed: number;
-  
+
   // Trip info
   pickup?: { x: number; y: number; name: string };
   dropoff?: { x: number; y: number; name: string };
@@ -80,13 +82,13 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
   const assignTrip = useCallback((driverId: string, riderId: string) => {
     const rider = riders.find((r) => r.id === riderId);
     const driver = drivers.find((d) => d.id === driverId);
-    
+
     if (!rider || !driver || driver.status !== "available") return;
 
     // Find nearest nodes
     const driverNode = findNearestNode(driver.x, driver.y);
     const pickupNode = findNearestNode(rider.x, rider.y);
-    
+
     if (!driverNode || !pickupNode) return;
 
     // Calculate route to pickup
@@ -96,14 +98,14 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
       prev.map((d) =>
         d.id === driverId
           ? {
-              ...d,
-              status: "en_route" as DriverStatus,
-              route: routeToPickup,
-              routeIndex: 0,
-              segmentProgress: 0,
-              pickup: { x: rider.x, y: rider.y, name: rider.name },
-              rider: { id: rider.id, name: rider.name },
-            }
+            ...d,
+            status: "en_route" as DriverStatus,
+            route: routeToPickup,
+            routeIndex: 0,
+            segmentProgress: 0,
+            pickup: { x: rider.x, y: rider.y, name: rider.name },
+            rider: { id: rider.id, name: rider.name },
+          }
           : d
       )
     );
@@ -131,12 +133,12 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
             prev.map((d) =>
               d.id === driver.id
                 ? {
-                    ...d,
-                    status: "busy" as DriverStatus,
-                    route: path,
-                    routeIndex: 0,
-                    segmentProgress: 0,
-                  }
+                  ...d,
+                  status: "busy" as DriverStatus,
+                  route: path,
+                  routeIndex: 0,
+                  segmentProgress: 0,
+                }
                 : d
             )
           );
@@ -175,14 +177,14 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
               if (driver.status === "en_route" && driver.pickup) {
                 // Arrived at pickup, now go to dropoff
                 const pickupNode = findNearestNode(driver.pickup.x, driver.pickup.y);
-                
+
                 // Find a random destination
                 const destinations = PATHFINDING_NODES.filter(n => n.id !== pickupNode?.id);
                 const destNode = destinations[Math.floor(Math.random() * destinations.length)];
-                
+
                 if (pickupNode && destNode) {
                   const routeToDropoff = dijkstra(pickupNode.id, destNode.id);
-                  
+
                   // Update rider status
                   if (driver.rider) {
                     setRiders((prev) =>
@@ -209,6 +211,13 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
                       r.id === driver.rider?.id ? { ...r, status: "completed" } : r
                     )
                   );
+                  // Notify rest of system
+                  socket.emit("trip_completed", {
+                    tripId: `TRP-${Math.floor(Math.random() * 9000) + 1000}`,
+                    passengerId: driver.rider.id,
+                    driverId: driver.id,
+                    driverName: driver.name
+                  });
                 }
 
                 return {
@@ -306,10 +315,10 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
     if (driver.route.length < 2) return "";
 
     const points: string[] = [];
-    
+
     // Start from current position
     points.push(`${driver.x},${driver.y}`);
-    
+
     // Add remaining route nodes
     for (let i = driver.routeIndex + 1; i < driver.route.length; i++) {
       const node = getNodeById(driver.route[i]);
@@ -319,6 +328,28 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
     }
 
     return points.join(" ");
+  }, []);
+
+  // Add a new rider to the grid
+  const addRider = useCallback((data: any) => {
+    const nodeMatch = data.pickup.match(/Node\s*(\d+)/i);
+    const nodeId = nodeMatch ? `n${nodeMatch[1]}` : "n1";
+    const node = getNodeById(nodeId);
+
+    if (node) {
+      setRiders(prev => [
+        ...prev,
+        {
+          id: data.passengerId || Date.now().toString(),
+          name: data.passengerName || "New Passenger",
+          x: node.x,
+          y: node.y,
+          destination: data.destination,
+          status: "waiting"
+        }
+      ]);
+      toast.info(`NETWORK_SYNC: Passenger signal acquired at ${data.pickup}`);
+    }
   }, []);
 
   return {
@@ -332,6 +363,7 @@ export function useDriverSimulation({ initialDrivers, initialRiders }: UseDriver
     setShowRoutes,
     assignTrip,
     assignRandomTrips,
+    addRider,
     reset,
     getDriverRoutePath,
   };

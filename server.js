@@ -84,17 +84,35 @@ app.use('/api', async (req, res) => {
 // Real-time Simulation
 setInterval(() => {
     const load = Math.floor(Math.random() * 40) + 10;
+    const availableDrivers = Math.floor(Math.random() * 20) + 5;
     io.emit('metrics_update', {
         coreEngineLoad: load,
-        timestamp: new Date().toLocaleTimeString()
+        availableDrivers: availableDrivers,
+        timestamp: new Date().toLocaleTimeString(),
+        activeTrips: Math.floor(load / 2)
     });
 }, 2000);
 
 io.on('connection', (socket) => {
     console.log('Client connected for real-time updates');
+
+    socket.on('request_trip', (data) => {
+        console.log('Broadcasting trip request:', data);
+        io.emit('trip_broadcast', data);
+    });
+
+    socket.on('accept_trip', (data) => {
+        console.log('Broadcasting trip acceptance:', data);
+        io.emit('trip_confirmed', data);
+    });
+
+    socket.on('trip_completed', (data) => {
+        console.log('Broadcasting trip completion:', data);
+        io.emit('trip_finished', data);
+    });
 });
 
 const PORT = 8080;
 server.listen(PORT, () => {
-    console.log(`RideFlow API Bridge running on port ${PORT}`);
+    console.log(`Rido API Bridge running on port ${PORT}`);
 });

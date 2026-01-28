@@ -23,7 +23,7 @@ export function Navbar() {
                         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary glow-primary transition-transform group-hover:scale-110">
                             <Zap className="h-5 w-5 text-primary-foreground" />
                         </div>
-                        <span className="text-xl font-bold text-foreground">RideFlow</span>
+                        <span className="text-xl font-bold text-foreground">Rido</span>
                     </Link>
 
                     {/* Desktop Nav */}
